@@ -1,0 +1,30 @@
+@startuml
+class Timestamp {
+    + Timestamp(ptr:IntPtr)
+    + Timestamp(value:long)
+    # <<override>> DeleteMpPtr() : void
+    + Equals(other:Timestamp) : bool
+    + <<override>> Equals(obj:System.Object) : bool
+    + <<override>> GetHashCode() : int
+    + Value() : long
+    + Seconds() : double
+    + Microseconds() : long
+    + IsSpecialValue() : bool
+    + IsRangeValue() : bool
+    + IsAllowedInStream() : bool
+    + DebugString() : string
+    + NextAllowedInStream() : Timestamp
+    + PreviousAllowedInStream() : Timestamp
+    + {static} FromSeconds(seconds:double) : Timestamp
+    + {static} Unset() : Timestamp
+    + {static} Unstarted() : Timestamp
+    + {static} PreStream() : Timestamp
+    + {static} Min() : Timestamp
+    + {static} Max() : Timestamp
+    + {static} PostStream() : Timestamp
+    + {static} OneOverPostStream() : Timestamp
+    + {static} Done() : Timestamp
+}
+MpResourceHandle <|-- Timestamp
+"IEquatable`1" "<Timestamp>" <|-- Timestamp
+@enduml

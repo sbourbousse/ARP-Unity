@@ -1,0 +1,11 @@
+@startuml
+class StatusOrGpuResources {
+    + StatusOrGpuResources(ptr:IntPtr)
+    # <<override>> DeleteMpPtr() : void
+    - _status : Status
+    + <<override>> status : Status <<get>>
+    + <<override>> Ok() : bool
+    + <<override>> Value() : GpuResources
+}
+"StatusOr`1" "<GpuResources>" <|-- StatusOrGpuResources
+@enduml

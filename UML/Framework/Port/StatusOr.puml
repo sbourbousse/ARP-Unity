@@ -1,0 +1,10 @@
+@startuml
+abstract class "StatusOr`1"<T> {
+    + StatusOr(ptr:IntPtr)
+    + {abstract} status : Status <<get>>
+    + <<virtual>> Ok() : bool
+    + <<virtual>> ValueOr(defaultValue:T) : T
+    + {abstract} Value() : T
+}
+MpResourceHandle <|-- "StatusOr`1"
+@enduml

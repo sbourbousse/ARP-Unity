@@ -1,0 +1,34 @@
+@startuml
+class CalculatorGraph {
+    + CalculatorGraph()
+    - CalculatorGraph(serializedConfig:byte[])
+    + CalculatorGraph(config:CalculatorGraphConfig)
+    + CalculatorGraph(textFormatConfig:string)
+    # <<override>> DeleteMpPtr() : void
+    + Initialize(config:CalculatorGraphConfig) : Status
+    + Initialize(config:CalculatorGraphConfig, sidePacket:SidePacket) : Status
+    + Config() : CalculatorGraphConfig
+    + ObserveOutputStream(streamName:string, streamId:int, nativePacketCallback:NativePacketCallback, observeTimestampBounds:bool) : Status
+    + ObserveOutputStream(streamName:string, packetCallback:PacketCallback<TPacket, TValue>, observeTimestampBounds:bool, callbackHandle:GCHandle) : Status
+    + ObserveOutputStream(streamName:string, packetCallback:PacketCallback<TPacket, TValue>, callbackHandle:GCHandle) : Status
+    + AddOutputStreamPoller(streamName:string, observeTimestampBounds:bool) : StatusOrPoller<T>
+    + Run() : Status
+    + Run(sidePacket:SidePacket) : Status
+    + StartRun() : Status
+    + StartRun(sidePacket:SidePacket) : Status
+    + WaitUntilIdle() : Status
+    + WaitUntilDone() : Status
+    + HasError() : bool
+    + AddPacketToInputStream(streamName:string, packet:Packet<T>) : Status
+    + SetInputStreamMaxQueueSize(streamName:string, maxQueueSize:int) : Status
+    + CloseInputStream(streamName:string) : Status
+    + CloseAllPacketSources() : Status
+    + Cancel() : void
+    + GraphInputStreamsClosed() : bool
+    + IsNodeThrottled(nodeId:int) : bool
+    + UnthrottleSources() : bool
+    + GetGpuResources() : GpuResources
+    + SetGpuResources(gpuResources:GpuResources) : Status
+}
+MpResourceHandle <|-- CalculatorGraph
+@enduml

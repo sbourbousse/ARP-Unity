@@ -1,0 +1,17 @@
+@startuml
+class FrameAnnotationController {
+    - _visualizeZ : bool = true
+    - _translateZ : float
+    - _scaleZ : float = 1.0f
+    + focalLength : Vector2
+    + principalPoint : Vector2
+    - _currentTarget : FrameAnnotation
+    # <<override>> Start() : void
+    - OnValidate() : void
+    + DrawNow(target:FrameAnnotation) : void
+    + DrawLater(target:FrameAnnotation) : void
+    # <<override>> SyncNow() : void
+    - ApplyTranslateZ(translateZ:float) : void
+}
+"AnnotationController`1" "<CuboidListAnnotation>" <|-- FrameAnnotationController
+@enduml

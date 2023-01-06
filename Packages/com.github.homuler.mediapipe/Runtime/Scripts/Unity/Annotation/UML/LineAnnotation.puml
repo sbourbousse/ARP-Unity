@@ -1,0 +1,17 @@
+@startuml
+class LineAnnotation {
+    - _lineRenderer : LineRenderer
+    - _color : Color
+    - _lineWidth : float = 1.0f
+    - OnEnable() : void
+    - OnDisable() : void
+    - OnValidate() : void
+    + SetColor(color:Color) : void
+    + SetLineWidth(lineWidth:float) : void
+    + Draw(a:Vector3, b:Vector3) : void
+    + Draw(a:GameObject, b:GameObject) : void
+    + ApplyColor(color:Color) : void
+    - ApplyLineWidth(lineWidth:float) : void
+}
+HierarchicalAnnotation <|-- LineAnnotation
+@enduml

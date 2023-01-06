@@ -1,0 +1,16 @@
+@startuml
+abstract class "ListAnnotation`1"<T> {
+    - _annotationPrefab : GameObject
+    - _children : List<T>
+    # children : List<T> <<get>>
+    + count : int <<get>>
+    + Fill(count:int) : void
+    + Add(element:T) : void
+    + <<override>> isMirrored : bool <<set>>
+    + <<override>> rotationAngle : RotationAngle <<set>>
+    # <<virtual>> Destroy() : void
+    # <<virtual>> InstantiateChild(isActive:bool) : T
+    # CallActionForAll(argumentList:IList<TArg>, action:Action<T, TArg>) : void
+}
+HierarchicalAnnotation <|-- "ListAnnotation`1"
+@enduml

@@ -1,0 +1,12 @@
+@startuml
+class DetectionListAnnotationController {
+    - _threshold : float = 0.0f
+    - _currentTarget : IList<Detection>
+    + DrawNow(target:IList<Detection>) : void
+    + DrawNow(target:DetectionList) : void
+    + DrawLater(target:IList<Detection>) : void
+    + DrawLater(target:DetectionList) : void
+    # <<override>> SyncNow() : void
+}
+"AnnotationController`1" "<DetectionListAnnotation>" <|-- DetectionListAnnotationController
+@enduml

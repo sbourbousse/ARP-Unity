@@ -1,0 +1,15 @@
+@startuml
+class PoseWorldLandmarkListAnnotationController {
+    - _hipHeightMeter : float = 0.9f
+    - _scale : Vector3
+    - _visualizeZ : bool = true
+    - _currentTarget : IList<Landmark>
+    # <<override>> Start() : void
+    + DrawNow(target:IList<Landmark>) : void
+    + DrawNow(target:LandmarkList) : void
+    + DrawLater(target:IList<Landmark>) : void
+    + DrawLater(target:LandmarkList) : void
+    # <<override>> SyncNow() : void
+}
+"AnnotationController`1" "<PoseLandmarkListAnnotation>" <|-- PoseWorldLandmarkListAnnotationController
+@enduml

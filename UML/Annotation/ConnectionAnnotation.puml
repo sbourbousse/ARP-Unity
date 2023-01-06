@@ -1,0 +1,10 @@
+@startuml
+class ConnectionAnnotation {
+    - _currentTarget : Connection
+    + isEmpty : bool <<get>>
+    + Draw(target:Connection) : void
+    + Redraw() : void
+    # ActivateFor(target:Connection) : bool
+}
+LineAnnotation <|-- ConnectionAnnotation
+@enduml

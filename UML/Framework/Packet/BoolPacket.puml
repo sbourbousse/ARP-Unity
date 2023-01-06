@@ -1,0 +1,13 @@
+@startuml
+class BoolPacket {
+    + BoolPacket()
+    + BoolPacket(ptr:IntPtr, isOwner:bool)
+    + BoolPacket(value:bool)
+    + BoolPacket(value:bool, timestamp:Timestamp)
+    + At(timestamp:Timestamp) : BoolPacket
+    + <<override>> Get() : bool
+    + <<override>> Consume() : StatusOr<bool>
+    + <<override>> ValidateAsType() : Status
+}
+"Packet`1" "<bool>" <|-- BoolPacket
+@enduml

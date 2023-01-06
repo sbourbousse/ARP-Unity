@@ -1,0 +1,17 @@
+@startuml
+class IrisLandmarkListAnnotation <<sealed>> {
+    - _landmarkListAnnotation : PointListAnnotation
+    - _circleAnnotation : CircleAnnotation
+    + <<override>> isMirrored : bool <<set>>
+    + <<override>> rotationAngle : RotationAngle <<set>>
+    + SetLandmarkColor(landmarkColor:Color) : void
+    + SetLandmarkRadius(landmarkRadius:float) : void
+    + SetCircleColor(circleColor:Color) : void
+    + SetCircleWidth(circleWidth:float) : void
+    + Draw(target:IList<NormalizedLandmark>, visualizeZ:bool, vertices:int) : void
+    + Draw(target:NormalizedLandmarkList, visualizeZ:bool, vertices:int) : void
+    - CalculateRadius(rect:UnityEngine.Rect, target:IList<NormalizedLandmark>) : float
+    - CalculateDistance(rect:UnityEngine.Rect, a:NormalizedLandmark, b:NormalizedLandmark) : float
+}
+HierarchicalAnnotation <|-- IrisLandmarkListAnnotation
+@enduml

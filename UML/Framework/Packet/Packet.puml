@@ -1,0 +1,21 @@
+@startuml
+abstract class "Packet`1"<TValue> {
+    # Packet()
+    # Packet(isOwner:bool)
+    # Packet(ptr:IntPtr, isOwner:bool)
+    + {static} Create(packetPtr:IntPtr, isOwner:bool) : TPacket
+    + SwitchNativePtr(packetPtr:IntPtr) : void
+    + {abstract} Get() : TValue
+    + {abstract} Consume() : StatusOr<TValue>
+    + IsEmpty() : bool
+    + ValidateAsProtoMessageLite() : Status
+    + <<virtual>> ValidateAsType() : Status
+    + Timestamp() : Timestamp
+    + DebugString() : string
+    + RegisteredTypeName() : string
+    + DebugTypeName() : string
+    # <<override>> DeleteMpPtr() : void
+    # At(timestamp:Timestamp) : TPacket
+}
+MpResourceHandle <|-- "Packet`1"
+@enduml

@@ -1,0 +1,13 @@
+@startuml
+class ImageFramePacket {
+    + ImageFramePacket()
+    + ImageFramePacket(ptr:IntPtr, isOwner:bool)
+    + ImageFramePacket(imageFrame:ImageFrame)
+    + ImageFramePacket(imageFrame:ImageFrame, timestamp:Timestamp)
+    + At(timestamp:Timestamp) : ImageFramePacket
+    + <<override>> Get() : ImageFrame
+    + <<override>> Consume() : StatusOr<ImageFrame>
+    + <<override>> ValidateAsType() : Status
+}
+"Packet`1" "<ImageFrame>" <|-- ImageFramePacket
+@enduml

@@ -1,0 +1,10 @@
+@startuml
+class DetectionVectorPacket {
+    + DetectionVectorPacket()
+    + DetectionVectorPacket(ptr:IntPtr, isOwner:bool)
+    + At(timestamp:Timestamp) : DetectionVectorPacket
+    + <<override>> Get() : List<Detection>
+    + <<override>> Consume() : StatusOr<List<Detection>>
+}
+"Packet`1" "<List<Detection>>" <|-- DetectionVectorPacket
+@enduml

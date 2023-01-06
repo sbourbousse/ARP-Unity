@@ -1,0 +1,20 @@
+@startuml
+class CuboidAnnotation <<sealed>> {
+    - _pointListAnnotation : PointListAnnotation
+    - _lineListAnnotation : ConnectionListAnnotation
+    - _transformAnnotation : TransformAnnotation
+    - _arrowLengthScale : float = 1.0f
+    - <<readonly>> _connections : List<(int, int)>
+    + <<override>> isMirrored : bool <<set>>
+    + <<override>> rotationAngle : RotationAngle <<set>>
+    - Start() : void
+    + SetPointColor(color:Color) : void
+    + SetLineColor(color:Color) : void
+    + SetLineWidth(lineWidth:float) : void
+    + SetArrowCapScale(arrowCapScale:float) : void
+    + SetArrowLengthScale(arrowLengthScale:float) : void
+    + SetArrowWidth(arrowWidth:float) : void
+    + Draw(target:ObjectAnnotation, focalLength:Vector2, principalPoint:Vector2, zScale:float, visualizeZ:bool) : void
+}
+HierarchicalAnnotation <|-- CuboidAnnotation
+@enduml

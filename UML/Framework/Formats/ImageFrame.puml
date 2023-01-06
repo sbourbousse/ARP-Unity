@@ -1,0 +1,38 @@
+@startuml
+class ImageFrame {
+    + {static} <<readonly>> DefaultAlignmentBoundary : uint = 16
+    + {static} <<readonly>> GlDefaultAlignmentBoundary : uint = 4
+    + ImageFrame()
+    + ImageFrame(imageFramePtr:IntPtr, isOwner:bool)
+    + ImageFrame(format:ImageFormat.Types.Format, width:int, height:int)
+    + ImageFrame(format:ImageFormat.Types.Format, width:int, height:int, alignmentBoundary:uint)
+    + ImageFrame(format:ImageFormat.Types.Format, width:int, height:int, widthStep:int, pixelData:IntPtr, deleter:Deleter)
+    + <<unsafe>> ImageFrame(format:ImageFormat.Types.Format, width:int, height:int, widthStep:int, pixelData:NativeArray<byte>, deleter:Deleter)
+    + ImageFrame(format:ImageFormat.Types.Format, width:int, height:int, widthStep:int, pixelData:NativeArray<byte>)
+    # <<override>> DeleteMpPtr() : void
+    - {static} VoidDeleter(_:IntPtr) : void
+    + {static} NumberOfChannelsForFormat(format:ImageFormat.Types.Format) : int
+    + {static} ChannelSizeForFormat(format:ImageFormat.Types.Format) : int
+    + {static} ByteDepthForFormat(format:ImageFormat.Types.Format) : int
+    + IsEmpty() : bool
+    + IsContiguous() : bool
+    + IsAligned(alignmentBoundary:uint) : bool
+    + Format() : ImageFormat.Types.Format
+    + Width() : int
+    + Height() : int
+    + ChannelSize() : int
+    + NumberOfChannels() : int
+    + ByteDepth() : int
+    + WidthStep() : int
+    + MutablePixelData() : IntPtr
+    + PixelDataSize() : int
+    + PixelDataSizeStoredContiguously() : int
+    + SetToZero() : void
+    + SetAlignmentPaddingAreas() : void
+    + CopyToBuffer(buffer:byte[]) : void
+    + CopyToBuffer(buffer:ushort[]) : void
+    + CopyToBuffer(buffer:float[]) : void
+    - CopyToBuffer(handler:CopyToBufferHandler, buffer:T[]) : void
+}
+MpResourceHandle <|-- ImageFrame
+@enduml

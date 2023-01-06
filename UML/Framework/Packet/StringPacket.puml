@@ -1,0 +1,16 @@
+@startuml
+class StringPacket {
+    + StringPacket()
+    + StringPacket(ptr:IntPtr, isOwner:bool)
+    + StringPacket(value:string)
+    + StringPacket(bytes:byte[])
+    + StringPacket(value:string, timestamp:Timestamp)
+    + StringPacket(bytes:byte[], timestamp:Timestamp)
+    + At(timestamp:Timestamp) : StringPacket
+    + <<override>> Get() : string
+    + GetByteArray() : byte[]
+    + <<override>> Consume() : StatusOr<string>
+    + <<override>> ValidateAsType() : Status
+}
+"Packet`1" "<string>" <|-- StringPacket
+@enduml

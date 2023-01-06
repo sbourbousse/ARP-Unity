@@ -1,0 +1,29 @@
+@startuml
+class HandLandmarkListAnnotation <<sealed>> {
+    - _landmarkListAnnotation : PointListAnnotation
+    - _connectionListAnnotation : ConnectionListAnnotation
+    - _leftLandmarkColor : Color
+    - _rightLandmarkColor : Color
+    - <<const>> _LandmarkCount : int = 21
+    - <<readonly>> _connections : List<(int, int)>
+    + <<override>> isMirrored : bool <<set>>
+    + <<override>> rotationAngle : RotationAngle <<set>>
+    - Start() : void
+    + SetLeftLandmarkColor(leftLandmarkColor:Color) : void
+    + SetRightLandmarkColor(rightLandmarkColor:Color) : void
+    + SetLandmarkRadius(landmarkRadius:float) : void
+    + SetConnectionColor(connectionColor:Color) : void
+    + SetConnectionWidth(connectionWidth:float) : void
+    + SetHandedness(handedness:Hand) : void
+    + SetHandedness(handedness:IList<Classification>) : void
+    + SetHandedness(handedness:ClassificationList) : void
+    + Draw(target:IList<NormalizedLandmark>, visualizeZ:bool) : void
+    + Draw(target:NormalizedLandmarkList, visualizeZ:bool) : void
+}
+enum Hand {
+    Left,
+    Right,
+}
+HierarchicalAnnotation <|-- HandLandmarkListAnnotation
+HandLandmarkListAnnotation +-- Hand
+@enduml

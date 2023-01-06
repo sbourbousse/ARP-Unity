@@ -1,0 +1,15 @@
+@startuml
+class NormalizedLandmarkListAnnotationController {
+    - _visualizeZ : bool = false
+    - _currentTarget : IList<NormalizedLandmark>
+    + DrawNow(target:IList<NormalizedLandmark>) : void
+    + DrawNow(target:NormalizedLandmarkList) : void
+    + DrawNow(landmarkLists:IList<NormalizedLandmarkList>) : void
+    + DrawLater(target:IList<NormalizedLandmark>) : void
+    + DrawLater(target:NormalizedLandmarkList) : void
+    + DrawLater(landmarkLists:IList<NormalizedLandmarkList>) : void
+    # <<override>> SyncNow() : void
+    - FlattenNormalizedLandmarkLists(landmarkLists:IList<NormalizedLandmarkList>) : IList<NormalizedLandmark>
+}
+"AnnotationController`1" "<PointListAnnotation>" <|-- NormalizedLandmarkListAnnotationController
+@enduml

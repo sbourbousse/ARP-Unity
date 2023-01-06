@@ -1,0 +1,11 @@
+@startuml
+class "StatusOrPoller`1"<T> {
+    + StatusOrPoller(ptr:IntPtr)
+    # <<override>> DeleteMpPtr() : void
+    - _status : Status
+    + <<override>> status : Status <<get>>
+    + <<override>> Ok() : bool
+    + <<override>> Value() : OutputStreamPoller<T>
+}
+"StatusOr`1" "<OutputStreamPoller<T>>" <|-- "StatusOrPoller`1"
+@enduml

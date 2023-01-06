@@ -1,0 +1,26 @@
+@startuml
+class Arrow {
+    - _color : Color
+    - _direction : Vector3
+    - _magnitude : float = 0.0f
+    - _capScale : float = 1.0f
+    - _lineWidth : float = 1.0f
+    - Start() : void
+    - OnValidate() : void
+    - _cone : Transform
+    - cone : Transform <<get>>
+    - lineRenderer : LineRenderer <<get>>
+    + direction : Vector3 <<get>> <<set>>
+    + magnitude : float <<get>> <<set>>
+    + color : Color <<get>> <<set>>
+    + SetVector(v:Vector3) : void
+    + SetCapScale(capScale:float) : void
+    + SetLineWidth(lineWidth:float) : void
+    - ApplyColor(color:Color) : void
+    - ApplyDirection(direction:Vector3) : void
+    - ApplyMagnitude(magnitude:float) : void
+    - ApplyCapScale(capScale:float) : void
+    - ApplyLineWidth(lineWidth:float) : void
+}
+MonoBehaviour <|-- Arrow
+@enduml

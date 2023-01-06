@@ -1,0 +1,24 @@
+@startuml
+class MaskAnnotation {
+    - _screen : RawImage
+    - _maskShader : Shader
+    - _maskTexture : Texture2D
+    - _color : Color
+    - _threshold : float = 0.9f
+    - _prevMaterial : Material
+    - _material : Material
+    - _maskBuffer : GraphicsBuffer
+    - OnEnable() : void
+    - OnDisable() : void
+    - OnValidate() : void
+    - OnDestroy() : void
+    + Init(width:int, height:int) : void
+    + Draw(mask:float[], width:int, height:int) : void
+    - CreateMonoColorTexture(color:Color) : Texture2D
+    - InitMaskBuffer(width:int, height:int) : void
+    - ApplyMaterial(material:Material) : void
+    - ApplyMaskTexture(maskTexture:Texture, maskColor:Color) : void
+    - ApplyThreshold(threshold:float) : void
+}
+HierarchicalAnnotation <|-- MaskAnnotation
+@enduml

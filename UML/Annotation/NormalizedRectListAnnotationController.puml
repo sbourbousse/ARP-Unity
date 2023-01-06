@@ -1,0 +1,9 @@
+@startuml
+class NormalizedRectListAnnotationController {
+    - _currentTarget : IList<NormalizedRect>
+    + DrawNow(target:IList<NormalizedRect>) : void
+    + DrawLater(target:IList<NormalizedRect>) : void
+    # <<override>> SyncNow() : void
+}
+"AnnotationController`1" "<RectangleListAnnotation>" <|-- NormalizedRectListAnnotationController
+@enduml

@@ -1,0 +1,16 @@
+@startuml
+class HolisticLandmarkListAnnotation <<sealed>> {
+    - _faceLandmarkListAnnotation : FaceLandmarkListWithIrisAnnotation
+    - _poseLandmarkListAnnotation : PoseLandmarkListAnnotation
+    - _leftHandLandmarkListAnnotation : HandLandmarkListAnnotation
+    - _rightHandLandmarkListAnnotation : HandLandmarkListAnnotation
+    - _connectionListAnnotation : ConnectionListAnnotation
+    + <<override>> isMirrored : bool <<set>>
+    + <<override>> rotationAngle : RotationAngle <<set>>
+    - Start() : void
+    + Draw(faceLandmarks:IList<NormalizedLandmark>, poseLandmarks:IList<NormalizedLandmark>, leftHandLandmarks:IList<NormalizedLandmark>, rightHandLandmarks:IList<NormalizedLandmark>, visualizeZ:bool, circleVertices:int) : void
+    + Draw(faceLandmarks:NormalizedLandmarkList, poseLandmarks:NormalizedLandmarkList, leftHandLandmarks:NormalizedLandmarkList, rightHandLandmarks:NormalizedLandmarkList, visualizeZ:bool, circleVertices:int) : void
+    - RedrawWristJoints() : void
+}
+HierarchicalAnnotation <|-- HolisticLandmarkListAnnotation
+@enduml

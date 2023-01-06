@@ -1,0 +1,13 @@
+@startuml
+class GpuBufferPacket {
+    + GpuBufferPacket()
+    + GpuBufferPacket(ptr:IntPtr, isOwner:bool)
+    + GpuBufferPacket(gpuBuffer:GpuBuffer)
+    + GpuBufferPacket(gpuBuffer:GpuBuffer, timestamp:Timestamp)
+    + At(timestamp:Timestamp) : GpuBufferPacket
+    + <<override>> Get() : GpuBuffer
+    + <<override>> Consume() : StatusOr<GpuBuffer>
+    + <<override>> ValidateAsType() : Status
+}
+"Packet`1" "<GpuBuffer>" <|-- GpuBufferPacket
+@enduml

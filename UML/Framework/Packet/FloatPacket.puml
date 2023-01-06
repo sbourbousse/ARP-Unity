@@ -1,0 +1,13 @@
+@startuml
+class FloatPacket {
+    + FloatPacket()
+    + FloatPacket(ptr:IntPtr, isOwner:bool)
+    + FloatPacket(value:float)
+    + FloatPacket(value:float, timestamp:Timestamp)
+    + At(timestamp:Timestamp) : FloatPacket
+    + <<override>> Get() : float
+    + <<override>> Consume() : StatusOr<float>
+    + <<override>> ValidateAsType() : Status
+}
+"Packet`1" "<float>" <|-- FloatPacket
+@enduml

@@ -1,0 +1,14 @@
+@startuml
+class MaskAnnotationController {
+    - _maskWidth : int
+    - _maskHeight : int
+    - _currentTarget : ImageFrame
+    - _maskArray : float[]
+    + InitScreen(maskWidth:int, maskHeight:int) : void
+    + DrawNow(target:ImageFrame) : void
+    + DrawLater(target:ImageFrame) : void
+    - UpdateMaskArray(imageFrame:ImageFrame) : void
+    # <<override>> SyncNow() : void
+}
+"AnnotationController`1" "<MaskAnnotation>" <|-- MaskAnnotationController
+@enduml

@@ -1,0 +1,12 @@
+@startuml
+class StatusOrString {
+    + StatusOrString(ptr:IntPtr)
+    # <<override>> DeleteMpPtr() : void
+    - _status : Status
+    + <<override>> status : Status <<get>>
+    + <<override>> Ok() : bool
+    + <<override>> Value() : string
+    + ValueAsByteArray() : byte[]
+}
+"StatusOr`1" "<string>" <|-- StatusOrString
+@enduml

@@ -1,0 +1,24 @@
+@startuml
+interface IHierachicalAnnotation {
+    root : IHierachicalAnnotation <<get>>
+    transform : Transform <<get>>
+    GetAnnotationLayer() : RectTransform
+    GetScreenRect() : UnityEngine.Rect
+}
+abstract class HierarchicalAnnotation {
+    - _root : IHierachicalAnnotation
+    + root : IHierachicalAnnotation <<get>> <<protected set>>
+    + GetAnnotationLayer() : RectTransform
+    + GetScreenRect() : UnityEngine.Rect
+    + isActive : bool <<get>>
+    + isActiveInHierarchy : bool <<get>>
+    + SetActive(isActive:bool) : void
+    # ActivateFor(target:T) : bool
+    + <<virtual>> isMirrored : bool <<get>> <<set>>
+    + <<virtual>> rotationAngle : RotationAngle <<get>> <<set>>
+    # InstantiateChild(prefab:GameObject) : TAnnotation
+    # InstantiateChild(name:string) : TAnnotation
+}
+MonoBehaviour <|-- HierarchicalAnnotation
+IHierachicalAnnotation <|-- HierarchicalAnnotation
+@enduml

@@ -1,0 +1,569 @@
+@startuml
+class CalculatorGraph {
+    + CalculatorGraph()
+    - CalculatorGraph(serializedConfig:byte[])
+    + CalculatorGraph(config:CalculatorGraphConfig)
+    + CalculatorGraph(textFormatConfig:string)
+    # <<override>> DeleteMpPtr() : void
+    + Initialize(config:CalculatorGraphConfig) : Status
+    + Initialize(config:CalculatorGraphConfig, sidePacket:SidePacket) : Status
+    + Config() : CalculatorGraphConfig
+    + ObserveOutputStream(streamName:string, streamId:int, nativePacketCallback:NativePacketCallback, observeTimestampBounds:bool) : Status
+    + ObserveOutputStream(streamName:string, packetCallback:PacketCallback<TPacket, TValue>, observeTimestampBounds:bool, callbackHandle:GCHandle) : Status
+    + ObserveOutputStream(streamName:string, packetCallback:PacketCallback<TPacket, TValue>, callbackHandle:GCHandle) : Status
+    + AddOutputStreamPoller(streamName:string, observeTimestampBounds:bool) : StatusOrPoller<T>
+    + Run() : Status
+    + Run(sidePacket:SidePacket) : Status
+    + StartRun() : Status
+    + StartRun(sidePacket:SidePacket) : Status
+    + WaitUntilIdle() : Status
+    + WaitUntilDone() : Status
+    + HasError() : bool
+    + AddPacketToInputStream(streamName:string, packet:Packet<T>) : Status
+    + SetInputStreamMaxQueueSize(streamName:string, maxQueueSize:int) : Status
+    + CloseInputStream(streamName:string) : Status
+    + CloseAllPacketSources() : Status
+    + Cancel() : void
+    + GraphInputStreamsClosed() : bool
+    + IsNodeThrottled(nodeId:int) : bool
+    + UnthrottleSources() : bool
+    + GetGpuResources() : GpuResources
+    + SetGpuResources(gpuResources:GpuResources) : Status
+}
+MpResourceHandle <|-- CalculatorGraph
+class CalculatorGraphConfigExtension <<static>> {
+    + {static} ParseFromTextFormat(_:pb::MessageParser<CalculatorGraphConfig>, configText:string) : CalculatorGraphConfig
+}
+class "OutputStreamPoller`1"<T> {
+    + OutputStreamPoller(ptr:IntPtr)
+    # <<override>> DeleteMpPtr() : void
+    + Next(packet:Packet<T>) : bool
+    + Reset() : void
+    + SetMaxQueueSize(queueSize:int) : void
+    + QueueSize() : int
+}
+MpResourceHandle <|-- "OutputStreamPoller`1"
+class Timestamp {
+    + Timestamp(ptr:IntPtr)
+    + Timestamp(value:long)
+    # <<override>> DeleteMpPtr() : void
+    + Equals(other:Timestamp) : bool
+    + <<override>> Equals(obj:System.Object) : bool
+    + <<override>> GetHashCode() : int
+    + Value() : long
+    + Seconds() : double
+    + Microseconds() : long
+    + IsSpecialValue() : bool
+    + IsRangeValue() : bool
+    + IsAllowedInStream() : bool
+    + DebugString() : string
+    + NextAllowedInStream() : Timestamp
+    + PreviousAllowedInStream() : Timestamp
+    + {static} FromSeconds(seconds:double) : Timestamp
+    + {static} Unset() : Timestamp
+    + {static} Unstarted() : Timestamp
+    + {static} PreStream() : Timestamp
+    + {static} Min() : Timestamp
+    + {static} Max() : Timestamp
+    + {static} PostStream() : Timestamp
+    + {static} OneOverPostStream() : Timestamp
+    + {static} Done() : Timestamp
+}
+MpResourceHandle <|-- Timestamp
+"IEquatable`1" "<Timestamp>" <|-- Timestamp
+enum NodeType {
+    Unknown= 0,
+    Calculator= 1,
+    PacketGenerator= 2,
+    GraphInputStream= 3,
+    StatusHandler= 4,
+}
+class NodeRef <<struct>> {
+    + <<readonly>> type : NodeType
+    + <<readonly>> index : int
+}
+class EdgeInfo <<struct>> {
+    + <<readonly>> upstream : int
+    + <<readonly>> parentNode : NodeRef
+    + <<readonly>> name : string
+    + <<readonly>> backEdge : bool
+    <<internal>> EdgeInfo(upstream:int, parentNode:NodeRef, name:string, backEdge:bool)
+}
+class EdgeInfoVector <<struct>> {
+    - <<readonly>> _data : IntPtr
+    - <<readonly>> _size : int
+    + Dispose() : void
+    + Copy() : List<EdgeInfo>
+}
+class ValidatedGraphConfig {
+    + ValidatedGraphConfig()
+    # <<override>> DeleteMpPtr() : void
+    + Initialize(config:CalculatorGraphConfig) : Status
+    + Initialize(graphType:string) : Status
+    + Initialized() : bool
+    + ValidateRequiredSidePackets(sidePacket:SidePacket) : Status
+    + Config(extensionRegistry:ExtensionRegistry) : CalculatorGraphConfig
+    + InputStreamInfos() : List<EdgeInfo>
+    + OutputStreamInfos() : List<EdgeInfo>
+    + InputSidePacketInfos() : List<EdgeInfo>
+    + OutputSidePacketInfos() : List<EdgeInfo>
+    + OutputStreamIndex(name:string) : int
+    + OutputSidePacketIndex(name:string) : int
+    + OutputStreamToNode(name:string) : int
+    + RegisteredSidePacketTypeName(name:string) : StatusOrString
+    + RegisteredStreamTypeName(name:string) : StatusOrString
+    + Package() : string
+    + {static} IsReservedExecutorName(name:string) : bool
+    + IsExternalSidePacket(name:string) : bool
+}
+class EdgeInfoTmp <<struct>> {
+    - <<readonly>> _upstream : int
+    - <<readonly>> _parentNode : NodeRef
+    - <<readonly>> _name : IntPtr
+    - <<readonly>> _backEdge : bool
+    + Copy() : EdgeInfo
+}
+MpResourceHandle <|-- ValidatedGraphConfig
+EdgeInfoVector +-- EdgeInfoTmp
+class ImageFrame {
+    + {static} <<readonly>> DefaultAlignmentBoundary : uint = 16
+    + {static} <<readonly>> GlDefaultAlignmentBoundary : uint = 4
+    + ImageFrame()
+    + ImageFrame(imageFramePtr:IntPtr, isOwner:bool)
+    + ImageFrame(format:ImageFormat.Types.Format, width:int, height:int)
+    + ImageFrame(format:ImageFormat.Types.Format, width:int, height:int, alignmentBoundary:uint)
+    + ImageFrame(format:ImageFormat.Types.Format, width:int, height:int, widthStep:int, pixelData:IntPtr, deleter:Deleter)
+    + <<unsafe>> ImageFrame(format:ImageFormat.Types.Format, width:int, height:int, widthStep:int, pixelData:NativeArray<byte>, deleter:Deleter)
+    + ImageFrame(format:ImageFormat.Types.Format, width:int, height:int, widthStep:int, pixelData:NativeArray<byte>)
+    # <<override>> DeleteMpPtr() : void
+    - {static} VoidDeleter(_:IntPtr) : void
+    + {static} NumberOfChannelsForFormat(format:ImageFormat.Types.Format) : int
+    + {static} ChannelSizeForFormat(format:ImageFormat.Types.Format) : int
+    + {static} ByteDepthForFormat(format:ImageFormat.Types.Format) : int
+    + IsEmpty() : bool
+    + IsContiguous() : bool
+    + IsAligned(alignmentBoundary:uint) : bool
+    + Format() : ImageFormat.Types.Format
+    + Width() : int
+    + Height() : int
+    + ChannelSize() : int
+    + NumberOfChannels() : int
+    + ByteDepth() : int
+    + WidthStep() : int
+    + MutablePixelData() : IntPtr
+    + PixelDataSize() : int
+    + PixelDataSizeStoredContiguously() : int
+    + SetToZero() : void
+    + SetAlignmentPaddingAreas() : void
+    + CopyToBuffer(buffer:byte[]) : void
+    + CopyToBuffer(buffer:ushort[]) : void
+    + CopyToBuffer(buffer:float[]) : void
+    - CopyToBuffer(handler:CopyToBufferHandler, buffer:T[]) : void
+}
+MpResourceHandle <|-- ImageFrame
+class Anchor3dVectorPacket {
+    + Anchor3dVectorPacket()
+    + Anchor3dVectorPacket(ptr:IntPtr, isOwner:bool)
+    + Anchor3dVectorPacket(value:Anchor3d[])
+    + Anchor3dVectorPacket(value:Anchor3d[], timestamp:Timestamp)
+    + At(timestamp:Timestamp) : Anchor3dVectorPacket
+    + <<override>> Get() : List<Anchor3d>
+    + <<override>> Consume() : StatusOr<List<Anchor3d>>
+}
+"Packet`1" "<List<Anchor3d>>" <|-- Anchor3dVectorPacket
+class BoolPacket {
+    + BoolPacket()
+    + BoolPacket(ptr:IntPtr, isOwner:bool)
+    + BoolPacket(value:bool)
+    + BoolPacket(value:bool, timestamp:Timestamp)
+    + At(timestamp:Timestamp) : BoolPacket
+    + <<override>> Get() : bool
+    + <<override>> Consume() : StatusOr<bool>
+    + <<override>> ValidateAsType() : Status
+}
+"Packet`1" "<bool>" <|-- BoolPacket
+class ClassificationListPacket {
+    + ClassificationListPacket()
+    + ClassificationListPacket(ptr:IntPtr, isOwner:bool)
+    + At(timestamp:Timestamp) : ClassificationListPacket
+    + <<override>> Get() : ClassificationList
+    + <<override>> Consume() : StatusOr<ClassificationList>
+}
+"Packet`1" "<ClassificationList>" <|-- ClassificationListPacket
+class ClassificationListVectorPacket {
+    + ClassificationListVectorPacket()
+    + ClassificationListVectorPacket(ptr:IntPtr, isOwner:bool)
+    + At(timestamp:Timestamp) : ClassificationListVectorPacket
+    + <<override>> Get() : List<ClassificationList>
+    + <<override>> Consume() : StatusOr<List<ClassificationList>>
+}
+"Packet`1" "<List<ClassificationList>>" <|-- ClassificationListVectorPacket
+class DetectionPacket {
+    + DetectionPacket()
+    + DetectionPacket(ptr:IntPtr, isOwner:bool)
+    + At(timestamp:Timestamp) : DetectionPacket
+    + <<override>> Get() : Detection
+    + <<override>> Consume() : StatusOr<Detection>
+}
+"Packet`1" "<Detection>" <|-- DetectionPacket
+class DetectionVectorPacket {
+    + DetectionVectorPacket()
+    + DetectionVectorPacket(ptr:IntPtr, isOwner:bool)
+    + At(timestamp:Timestamp) : DetectionVectorPacket
+    + <<override>> Get() : List<Detection>
+    + <<override>> Consume() : StatusOr<List<Detection>>
+}
+"Packet`1" "<List<Detection>>" <|-- DetectionVectorPacket
+class FaceGeometryPacket {
+    + FaceGeometryPacket()
+    + FaceGeometryPacket(ptr:IntPtr, isOwner:bool)
+    + At(timestamp:Timestamp) : FaceGeometryPacket
+    + <<override>> Get() : FaceGeometry.FaceGeometry
+    + <<override>> Consume() : StatusOr<FaceGeometry.FaceGeometry>
+}
+"Packet`1" "<FaceGeometry.FaceGeometry>" <|-- FaceGeometryPacket
+class FaceGeometryVectorPacket {
+    + FaceGeometryVectorPacket()
+    + FaceGeometryVectorPacket(ptr:IntPtr, isOwner:bool)
+    + At(timestamp:Timestamp) : FaceGeometryVectorPacket
+    + <<override>> Get() : List<FaceGeometry.FaceGeometry>
+    + <<override>> Consume() : StatusOr<List<FaceGeometry.FaceGeometry>>
+}
+"Packet`1" "<List<FaceGeometry.FaceGeometry>>" <|-- FaceGeometryVectorPacket
+class FloatArrayPacket {
+    - _length : int
+    + length : int <<get>> <<set>>
+    + FloatArrayPacket()
+    + FloatArrayPacket(ptr:IntPtr, isOwner:bool)
+    + FloatArrayPacket(value:float[])
+    + FloatArrayPacket(value:float[], timestamp:Timestamp)
+    + At(timestamp:Timestamp) : FloatArrayPacket
+    + <<override>> Get() : float[]
+    + GetArrayPtr() : IntPtr
+    + <<override>> Consume() : StatusOr<float[]>
+    + <<override>> ValidateAsType() : Status
+}
+"Packet`1" "<float[]>" <|-- FloatArrayPacket
+class FloatPacket {
+    + FloatPacket()
+    + FloatPacket(ptr:IntPtr, isOwner:bool)
+    + FloatPacket(value:float)
+    + FloatPacket(value:float, timestamp:Timestamp)
+    + At(timestamp:Timestamp) : FloatPacket
+    + <<override>> Get() : float
+    + <<override>> Consume() : StatusOr<float>
+    + <<override>> ValidateAsType() : Status
+}
+"Packet`1" "<float>" <|-- FloatPacket
+class FrameAnnotationPacket {
+    + FrameAnnotationPacket()
+    + FrameAnnotationPacket(ptr:IntPtr, isOwner:bool)
+    + At(timestamp:Timestamp) : FrameAnnotationPacket
+    + <<override>> Get() : FrameAnnotation
+    + <<override>> Consume() : StatusOr<FrameAnnotation>
+}
+"Packet`1" "<FrameAnnotation>" <|-- FrameAnnotationPacket
+class GpuBufferPacket {
+    + GpuBufferPacket()
+    + GpuBufferPacket(ptr:IntPtr, isOwner:bool)
+    + GpuBufferPacket(gpuBuffer:GpuBuffer)
+    + GpuBufferPacket(gpuBuffer:GpuBuffer, timestamp:Timestamp)
+    + At(timestamp:Timestamp) : GpuBufferPacket
+    + <<override>> Get() : GpuBuffer
+    + <<override>> Consume() : StatusOr<GpuBuffer>
+    + <<override>> ValidateAsType() : Status
+}
+"Packet`1" "<GpuBuffer>" <|-- GpuBufferPacket
+class ImageFramePacket {
+    + ImageFramePacket()
+    + ImageFramePacket(ptr:IntPtr, isOwner:bool)
+    + ImageFramePacket(imageFrame:ImageFrame)
+    + ImageFramePacket(imageFrame:ImageFrame, timestamp:Timestamp)
+    + At(timestamp:Timestamp) : ImageFramePacket
+    + <<override>> Get() : ImageFrame
+    + <<override>> Consume() : StatusOr<ImageFrame>
+    + <<override>> ValidateAsType() : Status
+}
+"Packet`1" "<ImageFrame>" <|-- ImageFramePacket
+class IntPacket {
+    + IntPacket()
+    + IntPacket(ptr:IntPtr, isOwner:bool)
+    + IntPacket(value:int)
+    + IntPacket(value:int, timestamp:Timestamp)
+    + At(timestamp:Timestamp) : IntPacket
+    + <<override>> Get() : int
+    + <<override>> Consume() : StatusOr<int>
+    + <<override>> ValidateAsType() : Status
+}
+"Packet`1" "<int>" <|-- IntPacket
+class LandmarkListPacket {
+    + LandmarkListPacket()
+    + LandmarkListPacket(ptr:IntPtr, isOwner:bool)
+    + At(timestamp:Timestamp) : LandmarkListPacket
+    + <<override>> Get() : LandmarkList
+    + <<override>> Consume() : StatusOr<LandmarkList>
+}
+"Packet`1" "<LandmarkList>" <|-- LandmarkListPacket
+class LandmarkListVectorPacket {
+    + LandmarkListVectorPacket()
+    + LandmarkListVectorPacket(ptr:IntPtr, isOwner:bool)
+    + At(timestamp:Timestamp) : LandmarkListVectorPacket
+    + <<override>> Get() : List<LandmarkList>
+    + <<override>> Consume() : StatusOr<List<LandmarkList>>
+}
+"Packet`1" "<List<LandmarkList>>" <|-- LandmarkListVectorPacket
+class NormalizedLandmarkListPacket {
+    + NormalizedLandmarkListPacket()
+    + NormalizedLandmarkListPacket(ptr:IntPtr, isOwner:bool)
+    + At(timestamp:Timestamp) : NormalizedLandmarkListPacket
+    + <<override>> Get() : NormalizedLandmarkList
+    + <<override>> Consume() : StatusOr<NormalizedLandmarkList>
+}
+"Packet`1" "<NormalizedLandmarkList>" <|-- NormalizedLandmarkListPacket
+class NormalizedLandmarkListVectorPacket {
+    + NormalizedLandmarkListVectorPacket()
+    + NormalizedLandmarkListVectorPacket(ptr:IntPtr, isOwner:bool)
+    + At(timestamp:Timestamp) : NormalizedLandmarkListVectorPacket
+    + <<override>> Get() : List<NormalizedLandmarkList>
+    + <<override>> Consume() : StatusOr<List<NormalizedLandmarkList>>
+}
+"Packet`1" "<List<NormalizedLandmarkList>>" <|-- NormalizedLandmarkListVectorPacket
+class NormalizedRectPacket {
+    + NormalizedRectPacket()
+    + NormalizedRectPacket(ptr:IntPtr, isOwner:bool)
+    + At(timestamp:Timestamp) : NormalizedRectPacket
+    + <<override>> Get() : NormalizedRect
+    + <<override>> Consume() : StatusOr<NormalizedRect>
+}
+"Packet`1" "<NormalizedRect>" <|-- NormalizedRectPacket
+class NormalizedRectVectorPacket {
+    + NormalizedRectVectorPacket()
+    + NormalizedRectVectorPacket(ptr:IntPtr, isOwner:bool)
+    + At(timestamp:Timestamp) : NormalizedRectVectorPacket
+    + <<override>> Get() : List<NormalizedRect>
+    + <<override>> Consume() : StatusOr<List<NormalizedRect>>
+}
+"Packet`1" "<List<NormalizedRect>>" <|-- NormalizedRectVectorPacket
+abstract class "Packet`1"<TValue> {
+    # Packet()
+    # Packet(isOwner:bool)
+    # Packet(ptr:IntPtr, isOwner:bool)
+    + {static} Create(packetPtr:IntPtr, isOwner:bool) : TPacket
+    + SwitchNativePtr(packetPtr:IntPtr) : void
+    + {abstract} Get() : TValue
+    + {abstract} Consume() : StatusOr<TValue>
+    + IsEmpty() : bool
+    + ValidateAsProtoMessageLite() : Status
+    + <<virtual>> ValidateAsType() : Status
+    + Timestamp() : Timestamp
+    + DebugString() : string
+    + RegisteredTypeName() : string
+    + DebugTypeName() : string
+    # <<override>> DeleteMpPtr() : void
+    # At(timestamp:Timestamp) : TPacket
+}
+MpResourceHandle <|-- "Packet`1"
+class RectPacket {
+    + RectPacket()
+    + RectPacket(ptr:IntPtr, isOwner:bool)
+    + At(timestamp:Timestamp) : RectPacket
+    + <<override>> Get() : Rect
+    + <<override>> Consume() : StatusOr<Rect>
+}
+"Packet`1" "<Rect>" <|-- RectPacket
+class RectVectorPacket {
+    + RectVectorPacket()
+    + RectVectorPacket(ptr:IntPtr, isOwner:bool)
+    + At(timestamp:Timestamp) : RectVectorPacket
+    + <<override>> Get() : List<Rect>
+    + <<override>> Consume() : StatusOr<List<Rect>>
+}
+"Packet`1" "<List<Rect>>" <|-- RectVectorPacket
+class SidePacket {
+    + SidePacket()
+    # <<override>> DeleteMpPtr() : void
+    + size : int <<get>>
+    + At(key:string) : TPacket
+    + Emplace(key:string, packet:Packet<T>) : void
+    + Erase(key:string) : int
+    + Clear() : void
+}
+MpResourceHandle <|-- SidePacket
+class StringPacket {
+    + StringPacket()
+    + StringPacket(ptr:IntPtr, isOwner:bool)
+    + StringPacket(value:string)
+    + StringPacket(bytes:byte[])
+    + StringPacket(value:string, timestamp:Timestamp)
+    + StringPacket(bytes:byte[], timestamp:Timestamp)
+    + At(timestamp:Timestamp) : StringPacket
+    + <<override>> Get() : string
+    + GetByteArray() : byte[]
+    + <<override>> Consume() : StatusOr<string>
+    + <<override>> ValidateAsType() : Status
+}
+"Packet`1" "<string>" <|-- StringPacket
+class TimedModelMatrixProtoListPacket {
+    + TimedModelMatrixProtoListPacket()
+    + TimedModelMatrixProtoListPacket(ptr:IntPtr, isOwner:bool)
+    + At(timestamp:Timestamp) : TimedModelMatrixProtoListPacket
+    + <<override>> Get() : TimedModelMatrixProtoList
+    + <<override>> Consume() : StatusOr<TimedModelMatrixProtoList>
+}
+"Packet`1" "<TimedModelMatrixProtoList>" <|-- TimedModelMatrixProtoListPacket
+class Status {
+    + Status(ptr:IntPtr, isOwner:bool)
+    # <<override>> DeleteMpPtr() : void
+    - _ok : bool?
+    - _rawCode : int?
+    + AssertOk() : void
+    + Ok() : bool
+    + Code() : StatusCode
+    + RawCode() : int
+    + <<override>> ToString() : string
+    + {static} Build(code:StatusCode, message:string, isOwner:bool) : Status
+    + {static} Ok(isOwner:bool) : Status
+    + {static} Cancelled(message:string, isOwner:bool) : Status
+    + {static} Unknown(message:string, isOwner:bool) : Status
+    + {static} InvalidArgument(message:string, isOwner:bool) : Status
+    + {static} DeadlineExceeded(message:string, isOwner:bool) : Status
+    + {static} NotFound(message:string, isOwner:bool) : Status
+    + {static} AlreadyExists(message:string, isOwner:bool) : Status
+    + {static} PermissionDenied(message:string, isOwner:bool) : Status
+    + {static} ResourceExhausted(message:string, isOwner:bool) : Status
+    + {static} FailedPrecondition(message:string, isOwner:bool) : Status
+    + {static} Aborted(message:string, isOwner:bool) : Status
+    + {static} OutOfRange(message:string, isOwner:bool) : Status
+    + {static} Unimplemented(message:string, isOwner:bool) : Status
+    + {static} Internal(message:string, isOwner:bool) : Status
+    + {static} Unavailable(message:string, isOwner:bool) : Status
+    + {static} DataLoss(message:string, isOwner:bool) : Status
+    + {static} Unauthenticated(message:string, isOwner:bool) : Status
+}
+enum StatusCode {
+    Ok= 0,
+    Cancelled= 1,
+    Unknown= 2,
+    InvalidArgument= 3,
+    DeadlineExceeded= 4,
+    NotFound= 5,
+    AlreadyExists= 6,
+    PermissionDenied= 7,
+    ResourceExhausted= 8,
+    FailedPrecondition= 9,
+    Aborted= 10,
+    OutOfRange= 11,
+    Unimplemented= 12,
+    Internal= 13,
+    Unavailable= 14,
+    DataLoss= 15,
+    Unauthenticated= 16,
+}
+class StatusArgs <<struct>> {
+    - <<readonly>> _code : StatusCode
+    - <<readonly>> _message : IntPtr
+    - StatusArgs(code:StatusCode, message:string)
+    + {static} Ok() : StatusArgs
+    + {static} Cancelled(message:string) : StatusArgs
+    + {static} Unknown(message:string) : StatusArgs
+    + {static} InvalidArgument(message:string) : StatusArgs
+    + {static} DeadlineExceeded(message:string) : StatusArgs
+    + {static} NotFound(message:string) : StatusArgs
+    + {static} AlreadyExists(message:string) : StatusArgs
+    + {static} PermissionDenied(message:string) : StatusArgs
+    + {static} ResourceExhausted(message:string) : StatusArgs
+    + {static} FailedPrecondition(message:string) : StatusArgs
+    + {static} Aborted(message:string) : StatusArgs
+    + {static} OutOfRange(message:string) : StatusArgs
+    + {static} Unimplemented(message:string) : StatusArgs
+    + {static} Internal(message:string) : StatusArgs
+    + {static} Unavailable(message:string) : StatusArgs
+    + {static} DataLoss(message:string) : StatusArgs
+    + {static} Unauthenticated(message:string) : StatusArgs
+}
+MpResourceHandle <|-- Status
+Status +-- StatusCode
+Status +-- StatusArgs
+abstract class "StatusOr`1"<T> {
+    + StatusOr(ptr:IntPtr)
+    + {abstract} status : Status <<get>>
+    + <<virtual>> Ok() : bool
+    + <<virtual>> ValueOr(defaultValue:T) : T
+    + {abstract} Value() : T
+}
+MpResourceHandle <|-- "StatusOr`1"
+class StatusOrGpuBuffer {
+    + StatusOrGpuBuffer(ptr:IntPtr)
+    # <<override>> DeleteMpPtr() : void
+    - _status : Status
+    + <<override>> status : Status <<get>>
+    + <<override>> Ok() : bool
+    + <<override>> Value() : GpuBuffer
+}
+"StatusOr`1" "<GpuBuffer>" <|-- StatusOrGpuBuffer
+class StatusOrGpuResources {
+    + StatusOrGpuResources(ptr:IntPtr)
+    # <<override>> DeleteMpPtr() : void
+    - _status : Status
+    + <<override>> status : Status <<get>>
+    + <<override>> Ok() : bool
+    + <<override>> Value() : GpuResources
+}
+"StatusOr`1" "<GpuResources>" <|-- StatusOrGpuResources
+class StatusOrImageFrame {
+    + StatusOrImageFrame(ptr:IntPtr)
+    # <<override>> DeleteMpPtr() : void
+    - _status : Status
+    + <<override>> status : Status <<get>>
+    + <<override>> Ok() : bool
+    + <<override>> Value() : ImageFrame
+}
+"StatusOr`1" "<ImageFrame>" <|-- StatusOrImageFrame
+class "StatusOrPoller`1"<T> {
+    + StatusOrPoller(ptr:IntPtr)
+    # <<override>> DeleteMpPtr() : void
+    - _status : Status
+    + <<override>> status : Status <<get>>
+    + <<override>> Ok() : bool
+    + <<override>> Value() : OutputStreamPoller<T>
+}
+"StatusOr`1" "<OutputStreamPoller<T>>" <|-- "StatusOrPoller`1"
+class StatusOrString {
+    + StatusOrString(ptr:IntPtr)
+    # <<override>> DeleteMpPtr() : void
+    - _status : Status
+    + <<override>> status : Status <<get>>
+    + <<override>> Ok() : bool
+    + <<override>> Value() : string
+    + ValueAsByteArray() : byte[]
+}
+"StatusOr`1" "<string>" <|-- StatusOrString
+class Tool <<static>> <<partial>> {
+    + {static} GetUnusedNodeName(config:CalculatorGraphConfig, nodeNameBase:string) : string
+    + {static} GetUnusedSidePacketName(config:CalculatorGraphConfig, inputSidePacketNameBase:string) : string
+    + {static} GetUnusedStreamName(config:CalculatorGraphConfig, streamNameBase:string) : string
+    + {static} CanonicalNodeName(graphConfig:CalculatorGraphConfig, nodeId:int) : string
+    + {static} ParseNameFromStream(stream:string) : string
+    + {static} ParseTagIndex(tagIndex:string) : (string, int)
+    + {static} ParseTagIndexFromStream(stream:string) : (string, int)
+    + {static} CatTag(tag:string, index:int) : string
+    + {static} CatStream(tagIndex:(string, int), name:string) : string
+}
+class Internal <<static>> <<partial>> {
+    + <<const>> MaxCollectionItemId : int = 10000
+}
+class Tool <<static>> <<partial>> {
+    - <<const>> _NameRegex : string = "[a-z_][a-z0-9_]*"
+    - <<const>> _NumberRegex : string = "(0|[1-9][0-9]*)"
+    - <<const>> _TagRegex : string = "[A-Z_][A-Z0-9_]*"
+    - {static} <<readonly>> _TagAndNameRegex : string
+    - {static} <<readonly>> _TagIndexNameRegex : string
+    - {static} <<readonly>> _TagIndexRegex : string
+    + {static} ValidateName(name:string) : void
+    + {static} ValidateNumber(number:string) : void
+    + {static} ValidateTag(tag:string) : void
+    + {static} ParseTagAndName(tagAndName:string, tag:string, name:string) : void
+    + {static} ParseTagIndexName(tagIndexName:string, tag:string, index:int, name:string) : void
+    + {static} ParseTagIndex(tagIndex:string, tag:string, index:int) : void
+}
+@enduml

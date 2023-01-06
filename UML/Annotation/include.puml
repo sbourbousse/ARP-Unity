@@ -1,0 +1,644 @@
+@startuml
+abstract class "AnnotationController`1"<T> {
+    # annotation : T
+    # isStale : bool = false
+    + isMirrored : bool <<get>> <<set>>
+    + rotationAngle : RotationAngle <<get>> <<set>>
+    # <<virtual>> Start() : void
+    # <<virtual>> LateUpdate() : void
+    # <<virtual>> OnDestroy() : void
+    # {abstract} SyncNow() : void
+    # UpdateCurrentTarget(newTarget:TValue, currentTarget:TValue) : void
+    # IsTargetChanged(newTarget:TValue, currentTarget:TValue) : bool
+}
+MonoBehaviour <|-- "AnnotationController`1"
+class Arrow {
+    - _color : Color
+    - _direction : Vector3
+    - _magnitude : float = 0.0f
+    - _capScale : float = 1.0f
+    - _lineWidth : float = 1.0f
+    - Start() : void
+    - OnValidate() : void
+    - _cone : Transform
+    - cone : Transform <<get>>
+    - lineRenderer : LineRenderer <<get>>
+    + direction : Vector3 <<get>> <<set>>
+    + magnitude : float <<get>> <<set>>
+    + color : Color <<get>> <<set>>
+    + SetVector(v:Vector3) : void
+    + SetCapScale(capScale:float) : void
+    + SetLineWidth(lineWidth:float) : void
+    - ApplyColor(color:Color) : void
+    - ApplyDirection(direction:Vector3) : void
+    - ApplyMagnitude(magnitude:float) : void
+    - ApplyCapScale(capScale:float) : void
+    - ApplyLineWidth(lineWidth:float) : void
+}
+MonoBehaviour <|-- Arrow
+class CircleAnnotation {
+    - _lineRenderer : LineRenderer
+    - _color : Color
+    - _lineWidth : float = 1.0f
+    - OnEnable() : void
+    - OnDisable() : void
+    - OnValidate() : void
+    + SetColor(color:Color) : void
+    + SetLineWidth(lineWidth:float) : void
+    + Draw(center:Vector3, radius:float, vertices:int) : void
+    - ApplyColor(color:Color) : void
+    - ApplyLineWidth(lineWidth:float) : void
+}
+HierarchicalAnnotation <|-- CircleAnnotation
+class Connection {
+    + <<readonly>> start : HierarchicalAnnotation
+    + <<readonly>> end : HierarchicalAnnotation
+    + Connection(start:HierarchicalAnnotation, end:HierarchicalAnnotation)
+}
+class ConnectionAnnotation {
+    - _currentTarget : Connection
+    + isEmpty : bool <<get>>
+    + Draw(target:Connection) : void
+    + Redraw() : void
+    # ActivateFor(target:Connection) : bool
+}
+LineAnnotation <|-- ConnectionAnnotation
+class ConnectionListAnnotation <<sealed>> {
+    - _color : Color
+    - _lineWidth : float = 1.0f
+    - OnValidate() : void
+    + Fill(connections:IList<(int, int)>, points:PointListAnnotation) : void
+    + SetColor(color:Color) : void
+    + SetLineWidth(lineWidth:float) : void
+    + Draw(targets:IList<Connection>) : void
+    + Redraw() : void
+    # <<override>> InstantiateChild(isActive:bool) : ConnectionAnnotation
+    - ApplyColor(color:Color) : void
+    - ApplyLineWidth(lineWidth:float) : void
+}
+"ListAnnotation`1" "<ConnectionAnnotation>" <|-- ConnectionListAnnotation
+class CuboidAnnotation <<sealed>> {
+    - _pointListAnnotation : PointListAnnotation
+    - _lineListAnnotation : ConnectionListAnnotation
+    - _transformAnnotation : TransformAnnotation
+    - _arrowLengthScale : float = 1.0f
+    - <<readonly>> _connections : List<(int, int)>
+    + <<override>> isMirrored : bool <<set>>
+    + <<override>> rotationAngle : RotationAngle <<set>>
+    - Start() : void
+    + SetPointColor(color:Color) : void
+    + SetLineColor(color:Color) : void
+    + SetLineWidth(lineWidth:float) : void
+    + SetArrowCapScale(arrowCapScale:float) : void
+    + SetArrowLengthScale(arrowLengthScale:float) : void
+    + SetArrowWidth(arrowWidth:float) : void
+    + Draw(target:ObjectAnnotation, focalLength:Vector2, principalPoint:Vector2, zScale:float, visualizeZ:bool) : void
+}
+HierarchicalAnnotation <|-- CuboidAnnotation
+class CuboidListAnnotation {
+    - _pointColor : Color
+    - _lineColor : Color
+    - _lineWidth : float = 1.0f
+    - _arrowCapScale : float = 2.0f
+    - _arrowLengthScale : float = 1.0f
+    - _arrowWidth : float = 1.0f
+    - OnValidate() : void
+    + SetPointColor(pointColor:Color) : void
+    + SetLineColor(lineColor:Color) : void
+    + SetLineWidth(lineWidth:float) : void
+    + SetArrowCapScale(arrowCapScale:float) : void
+    + SetArrowLengthScale(arrowLengthScale:float) : void
+    + SetArrowWidth(arrowWidth:float) : void
+    + Draw(targets:IList<ObjectAnnotation>, focalLength:Vector2, principalPoint:Vector2, scale:float, visualizeZ:bool) : void
+    + Draw(target:FrameAnnotation, focalLength:Vector2, principalPoint:Vector2, scale:float, visualizeZ:bool) : void
+    # <<override>> InstantiateChild(isActive:bool) : CuboidAnnotation
+    - ApplyPointColor(pointColor:Color) : void
+    - ApplyLineColor(lineColor:Color) : void
+    - ApplyLineWidth(lineWidth:float) : void
+    - ApplyArrowCapScale(arrowCapScale:float) : void
+    - ApplyArrowLengthScale(arrowLengthScale:float) : void
+    - ApplyArrowWidth(arrowWidth:float) : void
+}
+"ListAnnotation`1" "<CuboidAnnotation>" <|-- CuboidListAnnotation
+class DetectionAnnotation <<sealed>> {
+    - _locationDataAnnotation : RectangleAnnotation
+    - _relativeKeypointsAnnotation : PointListAnnotation
+    - _labelAnnotation : LabelAnnotation
+    + <<override>> isMirrored : bool <<set>>
+    + <<override>> rotationAngle : RotationAngle <<set>>
+    + SetLineWidth(lineWidth:float) : void
+    + SetKeypointRadius(radius:float) : void
+    + Draw(target:Detection, threshold:float) : void
+    - GetColor(score:float, threshold:float) : Color
+}
+HierarchicalAnnotation <|-- DetectionAnnotation
+class DetectionAnnotationController {
+    - _threshold : float = 0.0f
+    - _currentTarget : Detection
+    + DrawNow(target:Detection) : void
+    + DrawLater(target:Detection) : void
+    # <<override>> SyncNow() : void
+}
+"AnnotationController`1" "<DetectionAnnotation>" <|-- DetectionAnnotationController
+class DetectionListAnnotation <<sealed>> {
+    - _lineWidth : float = 1.0f
+    - _keypointRadius : float = 15.0f
+    - OnValidate() : void
+    + SetLineWidth(lineWidth:float) : void
+    + SetKeypointRadius(keypointRadius:float) : void
+    + Draw(targets:IList<Detection>, threshold:float) : void
+    + Draw(target:DetectionList, threshold:float) : void
+    # <<override>> InstantiateChild(isActive:bool) : DetectionAnnotation
+    - ApplyLineWidth(lineWidth:float) : void
+    - ApplyKeypointRadius(keypointRadius:float) : void
+}
+"ListAnnotation`1" "<DetectionAnnotation>" <|-- DetectionListAnnotation
+class DetectionListAnnotationController {
+    - _threshold : float = 0.0f
+    - _currentTarget : IList<Detection>
+    + DrawNow(target:IList<Detection>) : void
+    + DrawNow(target:DetectionList) : void
+    + DrawLater(target:IList<Detection>) : void
+    + DrawLater(target:DetectionList) : void
+    # <<override>> SyncNow() : void
+}
+"AnnotationController`1" "<DetectionListAnnotation>" <|-- DetectionListAnnotationController
+class FaceLandmarkListAnnotation <<sealed>> {
+    - _landmarkListAnnotation : PointListAnnotation
+    - _connectionListAnnotation : ConnectionListAnnotation
+    - <<const>> _LandmarkCount : int = 468
+    - <<readonly>> _connections : List<(int, int)>
+    + <<override>> isMirrored : bool <<set>>
+    + <<override>> rotationAngle : RotationAngle <<set>>
+    - Start() : void
+    + SetLandmarkColor(landmarkColor:Color) : void
+    + SetLandmarkRadius(landmarkRadius:float) : void
+    + SetConnectionColor(connectionColor:Color) : void
+    + SetConnectionWidth(connectionWidth:float) : void
+    + Draw(target:IList<NormalizedLandmark>, visualizeZ:bool) : void
+    + Draw(target:NormalizedLandmarkList, visualizeZ:bool) : void
+}
+HierarchicalAnnotation <|-- FaceLandmarkListAnnotation
+class FaceLandmarkListAnnotationController {
+    - _visualizeZ : bool = false
+    - _circleVertices : int = 128
+    - _currentTarget : IList<NormalizedLandmark>
+    + DrawNow(target:IList<NormalizedLandmark>) : void
+    + DrawNow(target:NormalizedLandmarkList) : void
+    + DrawLater(target:IList<NormalizedLandmark>) : void
+    + DrawLater(target:NormalizedLandmarkList) : void
+    # <<override>> SyncNow() : void
+}
+"AnnotationController`1" "<FaceLandmarkListWithIrisAnnotation>" <|-- FaceLandmarkListAnnotationController
+class FaceLandmarkListWithIrisAnnotation <<sealed>> {
+    - _faceLandmarkListAnnotation : FaceLandmarkListAnnotation
+    - _leftIrisLandmarkListAnnotation : IrisLandmarkListAnnotation
+    - _rightIrisLandmarkListAnnotation : IrisLandmarkListAnnotation
+    - <<const>> _FaceLandmarkCount : int = 468
+    - <<const>> _IrisLandmarkCount : int = 5
+    + <<override>> isMirrored : bool <<set>>
+    + <<override>> rotationAngle : RotationAngle <<set>>
+    + SetFaceLandmarkColor(color:Color) : void
+    + SetIrisLandmarkColor(color:Color) : void
+    + SetFaceLandmarkRadius(radius:float) : void
+    + SetIrisLandmarkRadius(radius:float) : void
+    + SetFaceConnectionColor(color:Color) : void
+    + SetFaceConnectionWidth(width:float) : void
+    + SetIrisCircleColor(color:Color) : void
+    + SetIrisCircleWidth(width:float) : void
+    + Draw(target:IList<NormalizedLandmark>, visualizeZ:bool, circleVertices:int) : void
+    + Draw(target:NormalizedLandmarkList, visualizeZ:bool, circleVertices:int) : void
+    + DrawFaceLandmarkList(target:IList<NormalizedLandmark>, visualizeZ:bool) : void
+    + DrawLeftIrisLandmarkList(target:IList<NormalizedLandmark>, visualizeZ:bool, circleVertices:int) : void
+    + DrawRightIrisLandmarkList(target:IList<NormalizedLandmark>, visualizeZ:bool, circleVertices:int) : void
+    - {static} PartitionLandmarkList(landmarks:IList<NormalizedLandmark>) : (IList<NormalizedLandmark>, IList<NormalizedLandmark>, IList<NormalizedLandmark>)
+}
+HierarchicalAnnotation <|-- FaceLandmarkListWithIrisAnnotation
+class FrameAnnotationController {
+    - _visualizeZ : bool = true
+    - _translateZ : float
+    - _scaleZ : float = 1.0f
+    + focalLength : Vector2
+    + principalPoint : Vector2
+    - _currentTarget : FrameAnnotation
+    # <<override>> Start() : void
+    - OnValidate() : void
+    + DrawNow(target:FrameAnnotation) : void
+    + DrawLater(target:FrameAnnotation) : void
+    # <<override>> SyncNow() : void
+    - ApplyTranslateZ(translateZ:float) : void
+}
+"AnnotationController`1" "<CuboidListAnnotation>" <|-- FrameAnnotationController
+class HandLandmarkListAnnotation <<sealed>> {
+    - _landmarkListAnnotation : PointListAnnotation
+    - _connectionListAnnotation : ConnectionListAnnotation
+    - _leftLandmarkColor : Color
+    - _rightLandmarkColor : Color
+    - <<const>> _LandmarkCount : int = 21
+    - <<readonly>> _connections : List<(int, int)>
+    + <<override>> isMirrored : bool <<set>>
+    + <<override>> rotationAngle : RotationAngle <<set>>
+    - Start() : void
+    + SetLeftLandmarkColor(leftLandmarkColor:Color) : void
+    + SetRightLandmarkColor(rightLandmarkColor:Color) : void
+    + SetLandmarkRadius(landmarkRadius:float) : void
+    + SetConnectionColor(connectionColor:Color) : void
+    + SetConnectionWidth(connectionWidth:float) : void
+    + SetHandedness(handedness:Hand) : void
+    + SetHandedness(handedness:IList<Classification>) : void
+    + SetHandedness(handedness:ClassificationList) : void
+    + Draw(target:IList<NormalizedLandmark>, visualizeZ:bool) : void
+    + Draw(target:NormalizedLandmarkList, visualizeZ:bool) : void
+}
+enum Hand {
+    Left,
+    Right,
+}
+HierarchicalAnnotation <|-- HandLandmarkListAnnotation
+HandLandmarkListAnnotation +-- Hand
+interface IHierachicalAnnotation {
+    root : IHierachicalAnnotation <<get>>
+    transform : Transform <<get>>
+    GetAnnotationLayer() : RectTransform
+    GetScreenRect() : UnityEngine.Rect
+}
+abstract class HierarchicalAnnotation {
+    - _root : IHierachicalAnnotation
+    + root : IHierachicalAnnotation <<get>> <<protected set>>
+    + GetAnnotationLayer() : RectTransform
+    + GetScreenRect() : UnityEngine.Rect
+    + isActive : bool <<get>>
+    + isActiveInHierarchy : bool <<get>>
+    + SetActive(isActive:bool) : void
+    # ActivateFor(target:T) : bool
+    + <<virtual>> isMirrored : bool <<get>> <<set>>
+    + <<virtual>> rotationAngle : RotationAngle <<get>> <<set>>
+    # InstantiateChild(prefab:GameObject) : TAnnotation
+    # InstantiateChild(name:string) : TAnnotation
+}
+MonoBehaviour <|-- HierarchicalAnnotation
+IHierachicalAnnotation <|-- HierarchicalAnnotation
+class HolisticLandmarkListAnnotation <<sealed>> {
+    - _faceLandmarkListAnnotation : FaceLandmarkListWithIrisAnnotation
+    - _poseLandmarkListAnnotation : PoseLandmarkListAnnotation
+    - _leftHandLandmarkListAnnotation : HandLandmarkListAnnotation
+    - _rightHandLandmarkListAnnotation : HandLandmarkListAnnotation
+    - _connectionListAnnotation : ConnectionListAnnotation
+    + <<override>> isMirrored : bool <<set>>
+    + <<override>> rotationAngle : RotationAngle <<set>>
+    - Start() : void
+    + Draw(faceLandmarks:IList<NormalizedLandmark>, poseLandmarks:IList<NormalizedLandmark>, leftHandLandmarks:IList<NormalizedLandmark>, rightHandLandmarks:IList<NormalizedLandmark>, visualizeZ:bool, circleVertices:int) : void
+    + Draw(faceLandmarks:NormalizedLandmarkList, poseLandmarks:NormalizedLandmarkList, leftHandLandmarks:NormalizedLandmarkList, rightHandLandmarks:NormalizedLandmarkList, visualizeZ:bool, circleVertices:int) : void
+    - RedrawWristJoints() : void
+}
+HierarchicalAnnotation <|-- HolisticLandmarkListAnnotation
+class HolisticLandmarkListAnnotationController {
+    - _visualizeZ : bool = false
+    - _circleVertices : int = 128
+    - _currentFaceLandmarkList : IList<NormalizedLandmark>
+    - _currentPoseLandmarkList : IList<NormalizedLandmark>
+    - _currentLeftHandLandmarkList : IList<NormalizedLandmark>
+    - _currentRightHandLandmarkList : IList<NormalizedLandmark>
+    + DrawNow(faceLandmarkList:IList<NormalizedLandmark>, poseLandmarkList:IList<NormalizedLandmark>, leftHandLandmarkList:IList<NormalizedLandmark>, rightHandLandmarkList:IList<NormalizedLandmark>) : void
+    + DrawNow(faceLandmarkList:NormalizedLandmarkList, poseLandmarkList:NormalizedLandmarkList, leftHandLandmarkList:NormalizedLandmarkList, rightHandLandmarkList:NormalizedLandmarkList) : void
+    + DrawFaceLandmarkListLater(faceLandmarkList:IList<NormalizedLandmark>) : void
+    + DrawFaceLandmarkListLater(faceLandmarkList:NormalizedLandmarkList) : void
+    + DrawPoseLandmarkListLater(poseLandmarkList:IList<NormalizedLandmark>) : void
+    + DrawPoseLandmarkListLater(poseLandmarkList:NormalizedLandmarkList) : void
+    + DrawLeftHandLandmarkListLater(leftHandLandmarkList:IList<NormalizedLandmark>) : void
+    + DrawLeftHandLandmarkListLater(leftHandLandmarkList:NormalizedLandmarkList) : void
+    + DrawRightHandLandmarkListLater(rightHandLandmarkList:IList<NormalizedLandmark>) : void
+    + DrawRightHandLandmarkListLater(rightHandLandmarkList:NormalizedLandmarkList) : void
+    # <<override>> SyncNow() : void
+}
+"AnnotationController`1" "<HolisticLandmarkListAnnotation>" <|-- HolisticLandmarkListAnnotationController
+class IrisLandmarkListAnnotation <<sealed>> {
+    - _landmarkListAnnotation : PointListAnnotation
+    - _circleAnnotation : CircleAnnotation
+    + <<override>> isMirrored : bool <<set>>
+    + <<override>> rotationAngle : RotationAngle <<set>>
+    + SetLandmarkColor(landmarkColor:Color) : void
+    + SetLandmarkRadius(landmarkRadius:float) : void
+    + SetCircleColor(circleColor:Color) : void
+    + SetCircleWidth(circleWidth:float) : void
+    + Draw(target:IList<NormalizedLandmark>, visualizeZ:bool, vertices:int) : void
+    + Draw(target:NormalizedLandmarkList, visualizeZ:bool, vertices:int) : void
+    - CalculateRadius(rect:UnityEngine.Rect, target:IList<NormalizedLandmark>) : float
+    - CalculateDistance(rect:UnityEngine.Rect, a:NormalizedLandmark, b:NormalizedLandmark) : float
+}
+HierarchicalAnnotation <|-- IrisLandmarkListAnnotation
+class LabelAnnotation {
+    - _labelText : Text
+    - _backgroundTransform : Transform
+    + Draw(text:string, position:Vector3, color:Color, maxWidth:float, maxHeight:float) : void
+    - GetFontSize(text:string, maxWidth:float, maxHeight:float) : int
+    - DecideTextColor(backgroundColor:Color) : Color
+    - CalcRelativeLuminance(color:Color) : float
+    - CalcContrastRatio(lighter:Color, darker:Color) : float
+}
+HierarchicalAnnotation <|-- LabelAnnotation
+class LineAnnotation {
+    - _lineRenderer : LineRenderer
+    - _color : Color
+    - _lineWidth : float = 1.0f
+    - OnEnable() : void
+    - OnDisable() : void
+    - OnValidate() : void
+    + SetColor(color:Color) : void
+    + SetLineWidth(lineWidth:float) : void
+    + Draw(a:Vector3, b:Vector3) : void
+    + Draw(a:GameObject, b:GameObject) : void
+    + ApplyColor(color:Color) : void
+    - ApplyLineWidth(lineWidth:float) : void
+}
+HierarchicalAnnotation <|-- LineAnnotation
+abstract class "ListAnnotation`1"<T> {
+    - _annotationPrefab : GameObject
+    - _children : List<T>
+    # children : List<T> <<get>>
+    + count : int <<get>>
+    + Fill(count:int) : void
+    + Add(element:T) : void
+    + <<override>> isMirrored : bool <<set>>
+    + <<override>> rotationAngle : RotationAngle <<set>>
+    # <<virtual>> Destroy() : void
+    # <<virtual>> InstantiateChild(isActive:bool) : T
+    # CallActionForAll(argumentList:IList<TArg>, action:Action<T, TArg>) : void
+}
+HierarchicalAnnotation <|-- "ListAnnotation`1"
+class MaskAnnotation {
+    - _screen : RawImage
+    - _maskShader : Shader
+    - _maskTexture : Texture2D
+    - _color : Color
+    - _threshold : float = 0.9f
+    - _prevMaterial : Material
+    - _material : Material
+    - _maskBuffer : GraphicsBuffer
+    - OnEnable() : void
+    - OnDisable() : void
+    - OnValidate() : void
+    - OnDestroy() : void
+    + Init(width:int, height:int) : void
+    + Draw(mask:float[], width:int, height:int) : void
+    - CreateMonoColorTexture(color:Color) : Texture2D
+    - InitMaskBuffer(width:int, height:int) : void
+    - ApplyMaterial(material:Material) : void
+    - ApplyMaskTexture(maskTexture:Texture, maskColor:Color) : void
+    - ApplyThreshold(threshold:float) : void
+}
+HierarchicalAnnotation <|-- MaskAnnotation
+class MaskAnnotationController {
+    - _maskWidth : int
+    - _maskHeight : int
+    - _currentTarget : ImageFrame
+    - _maskArray : float[]
+    + InitScreen(maskWidth:int, maskHeight:int) : void
+    + DrawNow(target:ImageFrame) : void
+    + DrawLater(target:ImageFrame) : void
+    - UpdateMaskArray(imageFrame:ImageFrame) : void
+    # <<override>> SyncNow() : void
+}
+"AnnotationController`1" "<MaskAnnotation>" <|-- MaskAnnotationController
+class MultiFaceLandmarkListAnnotation <<sealed>> {
+    - _faceLandmarkColor : Color
+    - _irisLandmarkColor : Color
+    - _faceLandmarkRadius : float = 10.0f
+    - _irisLandmarkRadius : float = 10.0f
+    - _faceConnectionColor : Color
+    - _irisCircleColor : Color
+    - _faceConnectionWidth : float = 1.0f
+    - _irisCircleWidth : float = 1.0f
+    - OnValidate() : void
+    + SetFaceLandmarkRadius(radius:float) : void
+    + SetIrisLandmarkRadius(radius:float) : void
+    + SetFaceLandmarkColor(color:Color) : void
+    + SetIrisLandmarkColor(color:Color) : void
+    + SetFaceConnectionWidth(width:float) : void
+    + SetFaceConnectionColor(color:Color) : void
+    + SetIrisCircleWidth(width:float) : void
+    + SetIrisCircleColor(color:Color) : void
+    + Draw(targets:IList<NormalizedLandmarkList>, visualizeZ:bool) : void
+    # <<override>> InstantiateChild(isActive:bool) : FaceLandmarkListWithIrisAnnotation
+    - ApplyFaceLandmarkRadius(radius:float) : void
+    - ApplyIrisLandmarkRadius(radius:float) : void
+    - ApplyFaceLandmarkColor(color:Color) : void
+    - ApplyIrisLandmarkColor(color:Color) : void
+    - ApplyFaceConnectionWidth(width:float) : void
+    - ApplyFaceConnectionColor(color:Color) : void
+    - ApplyIrisCircleWidth(width:float) : void
+    - ApplyIrisCircleColor(color:Color) : void
+}
+"ListAnnotation`1" "<FaceLandmarkListWithIrisAnnotation>" <|-- MultiFaceLandmarkListAnnotation
+class MultiFaceLandmarkListAnnotationController {
+    - _visualizeZ : bool = false
+    - _currentTarget : IList<NormalizedLandmarkList>
+    + DrawNow(target:IList<NormalizedLandmarkList>) : void
+    + DrawLater(target:IList<NormalizedLandmarkList>) : void
+    # <<override>> SyncNow() : void
+}
+"AnnotationController`1" "<MultiFaceLandmarkListAnnotation>" <|-- MultiFaceLandmarkListAnnotationController
+class MultiHandLandmarkListAnnotation <<sealed>> {
+    - _leftLandmarkColor : Color
+    - _rightLandmarkColor : Color
+    - _landmarkRadius : float = 15.0f
+    - _connectionColor : Color
+    - _connectionWidth : float = 1.0f
+    - OnValidate() : void
+    + SetLeftLandmarkColor(leftLandmarkColor:Color) : void
+    + SetRightLandmarkColor(rightLandmarkColor:Color) : void
+    + SetLandmarkRadius(landmarkRadius:float) : void
+    + SetConnectionColor(connectionColor:Color) : void
+    + SetConnectionWidth(connectionWidth:float) : void
+    + SetHandedness(handedness:IList<ClassificationList>) : void
+    + Draw(targets:IList<NormalizedLandmarkList>, visualizeZ:bool) : void
+    # <<override>> InstantiateChild(isActive:bool) : HandLandmarkListAnnotation
+    - ApplyLeftLandmarkColor(leftLandmarkColor:Color) : void
+    - ApplyRightLandmarkColor(rightLandmarkColor:Color) : void
+    - ApplyLandmarkRadius(landmarkRadius:float) : void
+    - ApplyConnectionColor(connectionColor:Color) : void
+    - ApplyConnectionWidth(connectionWidth:float) : void
+}
+"ListAnnotation`1" "<HandLandmarkListAnnotation>" <|-- MultiHandLandmarkListAnnotation
+class MultiHandLandmarkListAnnotationController {
+    - _visualizeZ : bool = false
+    - _currentHandLandmarkLists : IList<NormalizedLandmarkList>
+    - _currentHandedness : IList<ClassificationList>
+    + DrawNow(handLandmarkLists:IList<NormalizedLandmarkList>, handedness:IList<ClassificationList>) : void
+    + DrawLater(handLandmarkLists:IList<NormalizedLandmarkList>) : void
+    + DrawLater(handedness:IList<ClassificationList>) : void
+    # <<override>> SyncNow() : void
+}
+"AnnotationController`1" "<MultiHandLandmarkListAnnotation>" <|-- MultiHandLandmarkListAnnotationController
+class NormalizedLandmarkListAnnotationController {
+    - _visualizeZ : bool = false
+    - _currentTarget : IList<NormalizedLandmark>
+    + DrawNow(target:IList<NormalizedLandmark>) : void
+    + DrawNow(target:NormalizedLandmarkList) : void
+    + DrawNow(landmarkLists:IList<NormalizedLandmarkList>) : void
+    + DrawLater(target:IList<NormalizedLandmark>) : void
+    + DrawLater(target:NormalizedLandmarkList) : void
+    + DrawLater(landmarkLists:IList<NormalizedLandmarkList>) : void
+    # <<override>> SyncNow() : void
+    - FlattenNormalizedLandmarkLists(landmarkLists:IList<NormalizedLandmarkList>) : IList<NormalizedLandmark>
+}
+"AnnotationController`1" "<PointListAnnotation>" <|-- NormalizedLandmarkListAnnotationController
+class NormalizedRectAnnotationController {
+    - _currentTarget : NormalizedRect
+    + DrawNow(target:NormalizedRect) : void
+    + DrawLater(target:NormalizedRect) : void
+    # <<override>> SyncNow() : void
+}
+"AnnotationController`1" "<RectangleAnnotation>" <|-- NormalizedRectAnnotationController
+class NormalizedRectListAnnotationController {
+    - _currentTarget : IList<NormalizedRect>
+    + DrawNow(target:IList<NormalizedRect>) : void
+    + DrawLater(target:IList<NormalizedRect>) : void
+    # <<override>> SyncNow() : void
+}
+"AnnotationController`1" "<RectangleListAnnotation>" <|-- NormalizedRectListAnnotationController
+class PointAnnotation {
+    - _color : Color
+    - _radius : float = 15.0f
+    - OnEnable() : void
+    - OnDisable() : void
+    + SetColor(color:Color) : void
+    + SetRadius(radius:float) : void
+    + Draw(position:Vector3) : void
+    + Draw(target:Landmark, scale:Vector3, visualizeZ:bool) : void
+    + Draw(target:NormalizedLandmark, visualizeZ:bool) : void
+    + Draw(target:NormalizedPoint2D) : void
+    + Draw(target:Point3D, focalLength:Vector2, principalPoint:Vector2, zScale:float, visualizeZ:bool) : void
+    + Draw(target:AnnotatedKeyPoint, focalLength:Vector2, principalPoint:Vector2, zScale:float, visualizeZ:bool) : void
+    + Draw(target:mplt.RelativeKeypoint, threshold:float) : void
+    - ApplyColor(color:Color) : void
+    - ApplyRadius(radius:float) : void
+    - GetColor(score:float, threshold:float) : Color
+}
+HierarchicalAnnotation <|-- PointAnnotation
+class PointListAnnotation {
+    - _color : Color
+    - _radius : float = 15.0f
+    - OnValidate() : void
+    + SetColor(color:Color) : void
+    + SetRadius(radius:float) : void
+    + Draw(targets:IList<Vector3>) : void
+    + Draw(targets:IList<Landmark>, scale:Vector3, visualizeZ:bool) : void
+    + Draw(targets:LandmarkList, scale:Vector3, visualizeZ:bool) : void
+    + Draw(targets:IList<NormalizedLandmark>, visualizeZ:bool) : void
+    + Draw(targets:NormalizedLandmarkList, visualizeZ:bool) : void
+    + Draw(targets:IList<AnnotatedKeyPoint>, focalLength:Vector2, principalPoint:Vector2, zScale:float, visualizeZ:bool) : void
+    + Draw(targets:IList<mplt.RelativeKeypoint>, threshold:float) : void
+    # <<override>> InstantiateChild(isActive:bool) : PointAnnotation
+    - ApplyColor(color:Color) : void
+    - ApplyRadius(radius:float) : void
+}
+"ListAnnotation`1" "<PointAnnotation>" <|-- PointListAnnotation
+class PoseLandmarkListAnnotation <<sealed>> {
+    - _landmarkListAnnotation : PointListAnnotation
+    - _connectionListAnnotation : ConnectionListAnnotation
+    - _leftLandmarkColor : Color
+    - _rightLandmarkColor : Color
+    - <<const>> _LandmarkCount : int = 33
+    - {static} <<readonly>> _LeftLandmarks : int[]
+    - {static} <<readonly>> _RightLandmarks : int[]
+    - {static} <<readonly>> _Connections : List<(int, int)>
+    + <<override>> isMirrored : bool <<set>>
+    + <<override>> rotationAngle : RotationAngle <<set>>
+    - Start() : void
+    - OnValidate() : void
+    + SetLeftLandmarkColor(leftLandmarkColor:Color) : void
+    + SetRightLandmarkColor(rightLandmarkColor:Color) : void
+    + SetLandmarkRadius(landmarkRadius:float) : void
+    + SetConnectionColor(connectionColor:Color) : void
+    + SetConnectionWidth(connectionWidth:float) : void
+    + Draw(target:IList<Landmark>, scale:Vector3, visualizeZ:bool) : void
+    + Draw(target:LandmarkList, scale:Vector3, visualizeZ:bool) : void
+    + Draw(target:IList<NormalizedLandmark>, mask:BodyParts, visualizeZ:bool) : void
+    + Draw(target:NormalizedLandmarkList, mask:BodyParts, visualizeZ:bool) : void
+    + Draw(target:IList<NormalizedLandmark>, visualizeZ:bool) : void
+    + Draw(target:NormalizedLandmarkList, visualizeZ:bool) : void
+    - ApplyLeftLandmarkColor(color:Color) : void
+    - ApplyRightLandmarkColor(color:Color) : void
+    - ApplyMask(mask:BodyParts) : void
+}
+enum BodyParts {
+    None= 0,
+    Face= 1,
+    LeftArm= 4,
+    LeftHand= 8,
+    RightArm= 16,
+    RightHand= 32,
+    LowerBody= 64,
+    All= 127,
+}
+HierarchicalAnnotation <|-- PoseLandmarkListAnnotation
+PoseLandmarkListAnnotation +-- BodyParts
+class PoseLandmarkListAnnotationController {
+    - _visualizeZ : bool = false
+    - _currentTarget : IList<NormalizedLandmark>
+    + DrawNow(target:IList<NormalizedLandmark>) : void
+    + DrawNow(target:NormalizedLandmarkList) : void
+    + DrawLater(target:IList<NormalizedLandmark>) : void
+    + DrawLater(target:NormalizedLandmarkList) : void
+    # <<override>> SyncNow() : void
+}
+"AnnotationController`1" "<PoseLandmarkListAnnotation>" <|-- PoseLandmarkListAnnotationController
+class PoseWorldLandmarkListAnnotationController {
+    - _hipHeightMeter : float = 0.9f
+    - _scale : Vector3
+    - _visualizeZ : bool = true
+    - _currentTarget : IList<Landmark>
+    # <<override>> Start() : void
+    + DrawNow(target:IList<Landmark>) : void
+    + DrawNow(target:LandmarkList) : void
+    + DrawLater(target:IList<Landmark>) : void
+    + DrawLater(target:LandmarkList) : void
+    # <<override>> SyncNow() : void
+}
+"AnnotationController`1" "<PoseLandmarkListAnnotation>" <|-- PoseWorldLandmarkListAnnotationController
+class RectangleAnnotation {
+    - _lineRenderer : LineRenderer
+    - _color : Color
+    - _lineWidth : float = 1.0f
+    - {static} <<readonly>> _EmptyPositions : Vector3[]
+    - OnEnable() : void
+    - OnDisable() : void
+    - OnValidate() : void
+    + SetColor(color:Color) : void
+    + SetLineWidth(lineWidth:float) : void
+    + Draw(positions:Vector3[]) : void
+    + Draw(target:Rect, imageSize:Vector2Int) : void
+    + Draw(target:NormalizedRect) : void
+    + Draw(target:LocationData, imageSize:Vector2Int) : void
+    + Draw(target:LocationData) : void
+    - ApplyColor(color:Color) : void
+    - ApplyLineWidth(lineWidth:float) : void
+}
+HierarchicalAnnotation <|-- RectangleAnnotation
+class RectangleListAnnotation {
+    - _color : Color
+    - _lineWidth : float = 1.0f
+    - OnValidate() : void
+    + SetColor(color:Color) : void
+    + SetLineWidth(lineWidth:float) : void
+    + Draw(targets:IList<Rect>, imageSize:Vector2Int) : void
+    + Draw(targets:IList<NormalizedRect>) : void
+    # <<override>> InstantiateChild(isActive:bool) : RectangleAnnotation
+    - ApplyColor(color:Color) : void
+    - ApplyLineWidth(lineWidth:float) : void
+}
+"ListAnnotation`1" "<RectangleAnnotation>" <|-- RectangleListAnnotation
+class TransformAnnotation <<sealed>> {
+    - _xArrow : Arrow
+    - _yArrow : Arrow
+    - _zArrow : Arrow
+    + origin : Vector3 <<get>> <<set>>
+    + SetArrowCapScale(arrowCapScale:float) : void
+    + SetArrowWidth(arrowWidth:float) : void
+    + Draw(rotation:Quaternion, scale:Vector3, visualizeZ:bool) : void
+    + Draw(target:ObjectAnnotation, position:Vector3, arrowLengthScale:float, visualizeZ:bool) : void
+    - DrawArrow(arrow:Arrow, vec:Vector3, visualizeZ:bool) : void
+}
+HierarchicalAnnotation <|-- TransformAnnotation
+@enduml

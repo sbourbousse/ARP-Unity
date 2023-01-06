@@ -1,0 +1,56 @@
+@startuml
+enum NodeType {
+    Unknown= 0,
+    Calculator= 1,
+    PacketGenerator= 2,
+    GraphInputStream= 3,
+    StatusHandler= 4,
+}
+class NodeRef <<struct>> {
+    + <<readonly>> type : NodeType
+    + <<readonly>> index : int
+}
+class EdgeInfo <<struct>> {
+    + <<readonly>> upstream : int
+    + <<readonly>> parentNode : NodeRef
+    + <<readonly>> name : string
+    + <<readonly>> backEdge : bool
+    <<internal>> EdgeInfo(upstream:int, parentNode:NodeRef, name:string, backEdge:bool)
+}
+class EdgeInfoVector <<struct>> {
+    - <<readonly>> _data : IntPtr
+    - <<readonly>> _size : int
+    + Dispose() : void
+    + Copy() : List<EdgeInfo>
+}
+class ValidatedGraphConfig {
+    + ValidatedGraphConfig()
+    # <<override>> DeleteMpPtr() : void
+    + Initialize(config:CalculatorGraphConfig) : Status
+    + Initialize(graphType:string) : Status
+    + Initialized() : bool
+    + ValidateRequiredSidePackets(sidePacket:SidePacket) : Status
+    + Config(extensionRegistry:ExtensionRegistry) : CalculatorGraphConfig
+    + InputStreamInfos() : List<EdgeInfo>
+    + OutputStreamInfos() : List<EdgeInfo>
+    + InputSidePacketInfos() : List<EdgeInfo>
+    + OutputSidePacketInfos() : List<EdgeInfo>
+    + OutputStreamIndex(name:string) : int
+    + OutputSidePacketIndex(name:string) : int
+    + OutputStreamToNode(name:string) : int
+    + RegisteredSidePacketTypeName(name:string) : StatusOrString
+    + RegisteredStreamTypeName(name:string) : StatusOrString
+    + Package() : string
+    + {static} IsReservedExecutorName(name:string) : bool
+    + IsExternalSidePacket(name:string) : bool
+}
+class EdgeInfoTmp <<struct>> {
+    - <<readonly>> _upstream : int
+    - <<readonly>> _parentNode : NodeRef
+    - <<readonly>> _name : IntPtr
+    - <<readonly>> _backEdge : bool
+    + Copy() : EdgeInfo
+}
+MpResourceHandle <|-- ValidatedGraphConfig
+EdgeInfoVector +-- EdgeInfoTmp
+@enduml

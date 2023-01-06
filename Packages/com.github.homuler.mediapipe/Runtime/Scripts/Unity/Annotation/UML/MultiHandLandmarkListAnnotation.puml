@@ -1,0 +1,24 @@
+@startuml
+class MultiHandLandmarkListAnnotation <<sealed>> {
+    - _leftLandmarkColor : Color
+    - _rightLandmarkColor : Color
+    - _landmarkRadius : float = 15.0f
+    - _connectionColor : Color
+    - _connectionWidth : float = 1.0f
+    - OnValidate() : void
+    + SetLeftLandmarkColor(leftLandmarkColor:Color) : void
+    + SetRightLandmarkColor(rightLandmarkColor:Color) : void
+    + SetLandmarkRadius(landmarkRadius:float) : void
+    + SetConnectionColor(connectionColor:Color) : void
+    + SetConnectionWidth(connectionWidth:float) : void
+    + SetHandedness(handedness:IList<ClassificationList>) : void
+    + Draw(targets:IList<NormalizedLandmarkList>, visualizeZ:bool) : void
+    # <<override>> InstantiateChild(isActive:bool) : HandLandmarkListAnnotation
+    - ApplyLeftLandmarkColor(leftLandmarkColor:Color) : void
+    - ApplyRightLandmarkColor(rightLandmarkColor:Color) : void
+    - ApplyLandmarkRadius(landmarkRadius:float) : void
+    - ApplyConnectionColor(connectionColor:Color) : void
+    - ApplyConnectionWidth(connectionWidth:float) : void
+}
+"ListAnnotation`1" "<HandLandmarkListAnnotation>" <|-- MultiHandLandmarkListAnnotation
+@enduml

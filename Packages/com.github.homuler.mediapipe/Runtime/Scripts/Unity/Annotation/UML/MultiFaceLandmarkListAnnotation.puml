@@ -1,0 +1,32 @@
+@startuml
+class MultiFaceLandmarkListAnnotation <<sealed>> {
+    - _faceLandmarkColor : Color
+    - _irisLandmarkColor : Color
+    - _faceLandmarkRadius : float = 10.0f
+    - _irisLandmarkRadius : float = 10.0f
+    - _faceConnectionColor : Color
+    - _irisCircleColor : Color
+    - _faceConnectionWidth : float = 1.0f
+    - _irisCircleWidth : float = 1.0f
+    - OnValidate() : void
+    + SetFaceLandmarkRadius(radius:float) : void
+    + SetIrisLandmarkRadius(radius:float) : void
+    + SetFaceLandmarkColor(color:Color) : void
+    + SetIrisLandmarkColor(color:Color) : void
+    + SetFaceConnectionWidth(width:float) : void
+    + SetFaceConnectionColor(color:Color) : void
+    + SetIrisCircleWidth(width:float) : void
+    + SetIrisCircleColor(color:Color) : void
+    + Draw(targets:IList<NormalizedLandmarkList>, visualizeZ:bool) : void
+    # <<override>> InstantiateChild(isActive:bool) : FaceLandmarkListWithIrisAnnotation
+    - ApplyFaceLandmarkRadius(radius:float) : void
+    - ApplyIrisLandmarkRadius(radius:float) : void
+    - ApplyFaceLandmarkColor(color:Color) : void
+    - ApplyIrisLandmarkColor(color:Color) : void
+    - ApplyFaceConnectionWidth(width:float) : void
+    - ApplyFaceConnectionColor(color:Color) : void
+    - ApplyIrisCircleWidth(width:float) : void
+    - ApplyIrisCircleColor(color:Color) : void
+}
+"ListAnnotation`1" "<FaceLandmarkListWithIrisAnnotation>" <|-- MultiFaceLandmarkListAnnotation
+@enduml

@@ -1,0 +1,10 @@
+@startuml
+class FrameAnnotationPacket {
+    + FrameAnnotationPacket()
+    + FrameAnnotationPacket(ptr:IntPtr, isOwner:bool)
+    + At(timestamp:Timestamp) : FrameAnnotationPacket
+    + <<override>> Get() : FrameAnnotation
+    + <<override>> Consume() : StatusOr<FrameAnnotation>
+}
+"Packet`1" "<FrameAnnotation>" <|-- FrameAnnotationPacket
+@enduml

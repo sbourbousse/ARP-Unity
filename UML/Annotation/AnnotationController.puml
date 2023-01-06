@@ -1,0 +1,15 @@
+@startuml
+abstract class "AnnotationController`1"<T> {
+    # annotation : T
+    # isStale : bool = false
+    + isMirrored : bool <<get>> <<set>>
+    + rotationAngle : RotationAngle <<get>> <<set>>
+    # <<virtual>> Start() : void
+    # <<virtual>> LateUpdate() : void
+    # <<virtual>> OnDestroy() : void
+    # {abstract} SyncNow() : void
+    # UpdateCurrentTarget(newTarget:TValue, currentTarget:TValue) : void
+    # IsTargetChanged(newTarget:TValue, currentTarget:TValue) : bool
+}
+MonoBehaviour <|-- "AnnotationController`1"
+@enduml

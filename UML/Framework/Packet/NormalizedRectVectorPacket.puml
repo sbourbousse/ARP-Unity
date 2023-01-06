@@ -1,0 +1,10 @@
+@startuml
+class NormalizedRectVectorPacket {
+    + NormalizedRectVectorPacket()
+    + NormalizedRectVectorPacket(ptr:IntPtr, isOwner:bool)
+    + At(timestamp:Timestamp) : NormalizedRectVectorPacket
+    + <<override>> Get() : List<NormalizedRect>
+    + <<override>> Consume() : StatusOr<List<NormalizedRect>>
+}
+"Packet`1" "<List<NormalizedRect>>" <|-- NormalizedRectVectorPacket
+@enduml

@@ -1,0 +1,12 @@
+@startuml
+class Anchor3dVectorPacket {
+    + Anchor3dVectorPacket()
+    + Anchor3dVectorPacket(ptr:IntPtr, isOwner:bool)
+    + Anchor3dVectorPacket(value:Anchor3d[])
+    + Anchor3dVectorPacket(value:Anchor3d[], timestamp:Timestamp)
+    + At(timestamp:Timestamp) : Anchor3dVectorPacket
+    + <<override>> Get() : List<Anchor3d>
+    + <<override>> Consume() : StatusOr<List<Anchor3d>>
+}
+"Packet`1" "<List<Anchor3d>>" <|-- Anchor3dVectorPacket
+@enduml

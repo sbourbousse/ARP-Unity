@@ -1,0 +1,5 @@
+@startuml
+class CalculatorGraphConfigExtension <<static>> {
+    + {static} ParseFromTextFormat(_:pb::MessageParser<CalculatorGraphConfig>, configText:string) : CalculatorGraphConfig
+}
+@enduml

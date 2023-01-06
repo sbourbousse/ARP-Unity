@@ -1,0 +1,10 @@
+@startuml
+class TimedModelMatrixProtoListPacket {
+    + TimedModelMatrixProtoListPacket()
+    + TimedModelMatrixProtoListPacket(ptr:IntPtr, isOwner:bool)
+    + At(timestamp:Timestamp) : TimedModelMatrixProtoListPacket
+    + <<override>> Get() : TimedModelMatrixProtoList
+    + <<override>> Consume() : StatusOr<TimedModelMatrixProtoList>
+}
+"Packet`1" "<TimedModelMatrixProtoList>" <|-- TimedModelMatrixProtoListPacket
+@enduml

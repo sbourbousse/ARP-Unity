@@ -1,0 +1,10 @@
+@startuml
+class MultiFaceLandmarkListAnnotationController {
+    - _visualizeZ : bool = false
+    - _currentTarget : IList<NormalizedLandmarkList>
+    + DrawNow(target:IList<NormalizedLandmarkList>) : void
+    + DrawLater(target:IList<NormalizedLandmarkList>) : void
+    # <<override>> SyncNow() : void
+}
+"AnnotationController`1" "<MultiFaceLandmarkListAnnotation>" <|-- MultiFaceLandmarkListAnnotationController
+@enduml

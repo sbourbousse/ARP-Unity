@@ -1,0 +1,10 @@
+@startuml
+class ClassificationListVectorPacket {
+    + ClassificationListVectorPacket()
+    + ClassificationListVectorPacket(ptr:IntPtr, isOwner:bool)
+    + At(timestamp:Timestamp) : ClassificationListVectorPacket
+    + <<override>> Get() : List<ClassificationList>
+    + <<override>> Consume() : StatusOr<List<ClassificationList>>
+}
+"Packet`1" "<List<ClassificationList>>" <|-- ClassificationListVectorPacket
+@enduml

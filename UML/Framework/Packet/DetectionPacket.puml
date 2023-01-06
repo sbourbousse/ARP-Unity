@@ -1,0 +1,10 @@
+@startuml
+class DetectionPacket {
+    + DetectionPacket()
+    + DetectionPacket(ptr:IntPtr, isOwner:bool)
+    + At(timestamp:Timestamp) : DetectionPacket
+    + <<override>> Get() : Detection
+    + <<override>> Consume() : StatusOr<Detection>
+}
+"Packet`1" "<Detection>" <|-- DetectionPacket
+@enduml

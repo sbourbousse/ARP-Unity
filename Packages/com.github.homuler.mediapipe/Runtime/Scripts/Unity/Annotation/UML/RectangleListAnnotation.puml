@@ -1,0 +1,15 @@
+@startuml
+class RectangleListAnnotation {
+    - _color : Color
+    - _lineWidth : float = 1.0f
+    - OnValidate() : void
+    + SetColor(color:Color) : void
+    + SetLineWidth(lineWidth:float) : void
+    + Draw(targets:IList<Rect>, imageSize:Vector2Int) : void
+    + Draw(targets:IList<NormalizedRect>) : void
+    # <<override>> InstantiateChild(isActive:bool) : RectangleAnnotation
+    - ApplyColor(color:Color) : void
+    - ApplyLineWidth(lineWidth:float) : void
+}
+"ListAnnotation`1" "<RectangleAnnotation>" <|-- RectangleListAnnotation
+@enduml

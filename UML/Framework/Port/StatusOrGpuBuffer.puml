@@ -1,0 +1,11 @@
+@startuml
+class StatusOrGpuBuffer {
+    + StatusOrGpuBuffer(ptr:IntPtr)
+    # <<override>> DeleteMpPtr() : void
+    - _status : Status
+    + <<override>> status : Status <<get>>
+    + <<override>> Ok() : bool
+    + <<override>> Value() : GpuBuffer
+}
+"StatusOr`1" "<GpuBuffer>" <|-- StatusOrGpuBuffer
+@enduml

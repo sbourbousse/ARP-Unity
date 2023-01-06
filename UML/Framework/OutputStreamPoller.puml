@@ -1,0 +1,11 @@
+@startuml
+class "OutputStreamPoller`1"<T> {
+    + OutputStreamPoller(ptr:IntPtr)
+    # <<override>> DeleteMpPtr() : void
+    + Next(packet:Packet<T>) : bool
+    + Reset() : void
+    + SetMaxQueueSize(queueSize:int) : void
+    + QueueSize() : int
+}
+MpResourceHandle <|-- "OutputStreamPoller`1"
+@enduml

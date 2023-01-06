@@ -1,0 +1,10 @@
+@startuml
+class RectVectorPacket {
+    + RectVectorPacket()
+    + RectVectorPacket(ptr:IntPtr, isOwner:bool)
+    + At(timestamp:Timestamp) : RectVectorPacket
+    + <<override>> Get() : List<Rect>
+    + <<override>> Consume() : StatusOr<List<Rect>>
+}
+"Packet`1" "<List<Rect>>" <|-- RectVectorPacket
+@enduml

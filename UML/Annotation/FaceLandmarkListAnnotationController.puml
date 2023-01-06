@@ -1,0 +1,13 @@
+@startuml
+class FaceLandmarkListAnnotationController {
+    - _visualizeZ : bool = false
+    - _circleVertices : int = 128
+    - _currentTarget : IList<NormalizedLandmark>
+    + DrawNow(target:IList<NormalizedLandmark>) : void
+    + DrawNow(target:NormalizedLandmarkList) : void
+    + DrawLater(target:IList<NormalizedLandmark>) : void
+    + DrawLater(target:NormalizedLandmarkList) : void
+    # <<override>> SyncNow() : void
+}
+"AnnotationController`1" "<FaceLandmarkListWithIrisAnnotation>" <|-- FaceLandmarkListAnnotationController
+@enduml

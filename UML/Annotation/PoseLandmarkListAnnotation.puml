@@ -1,0 +1,42 @@
+@startuml
+class PoseLandmarkListAnnotation <<sealed>> {
+    - _landmarkListAnnotation : PointListAnnotation
+    - _connectionListAnnotation : ConnectionListAnnotation
+    - _leftLandmarkColor : Color
+    - _rightLandmarkColor : Color
+    - <<const>> _LandmarkCount : int = 33
+    - {static} <<readonly>> _LeftLandmarks : int[]
+    - {static} <<readonly>> _RightLandmarks : int[]
+    - {static} <<readonly>> _Connections : List<(int, int)>
+    + <<override>> isMirrored : bool <<set>>
+    + <<override>> rotationAngle : RotationAngle <<set>>
+    - Start() : void
+    - OnValidate() : void
+    + SetLeftLandmarkColor(leftLandmarkColor:Color) : void
+    + SetRightLandmarkColor(rightLandmarkColor:Color) : void
+    + SetLandmarkRadius(landmarkRadius:float) : void
+    + SetConnectionColor(connectionColor:Color) : void
+    + SetConnectionWidth(connectionWidth:float) : void
+    + Draw(target:IList<Landmark>, scale:Vector3, visualizeZ:bool) : void
+    + Draw(target:LandmarkList, scale:Vector3, visualizeZ:bool) : void
+    + Draw(target:IList<NormalizedLandmark>, mask:BodyParts, visualizeZ:bool) : void
+    + Draw(target:NormalizedLandmarkList, mask:BodyParts, visualizeZ:bool) : void
+    + Draw(target:IList<NormalizedLandmark>, visualizeZ:bool) : void
+    + Draw(target:NormalizedLandmarkList, visualizeZ:bool) : void
+    - ApplyLeftLandmarkColor(color:Color) : void
+    - ApplyRightLandmarkColor(color:Color) : void
+    - ApplyMask(mask:BodyParts) : void
+}
+enum BodyParts {
+    None= 0,
+    Face= 1,
+    LeftArm= 4,
+    LeftHand= 8,
+    RightArm= 16,
+    RightHand= 32,
+    LowerBody= 64,
+    All= 127,
+}
+HierarchicalAnnotation <|-- PoseLandmarkListAnnotation
+PoseLandmarkListAnnotation +-- BodyParts
+@enduml

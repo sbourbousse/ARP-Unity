@@ -1,0 +1,14 @@
+@startuml
+class DetectionAnnotation <<sealed>> {
+    - _locationDataAnnotation : RectangleAnnotation
+    - _relativeKeypointsAnnotation : PointListAnnotation
+    - _labelAnnotation : LabelAnnotation
+    + <<override>> isMirrored : bool <<set>>
+    + <<override>> rotationAngle : RotationAngle <<set>>
+    + SetLineWidth(lineWidth:float) : void
+    + SetKeypointRadius(radius:float) : void
+    + Draw(target:Detection, threshold:float) : void
+    - GetColor(score:float, threshold:float) : Color
+}
+HierarchicalAnnotation <|-- DetectionAnnotation
+@enduml

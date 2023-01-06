@@ -1,0 +1,16 @@
+@startuml
+class ConnectionListAnnotation <<sealed>> {
+    - _color : Color
+    - _lineWidth : float = 1.0f
+    - OnValidate() : void
+    + Fill(connections:IList<(int, int)>, points:PointListAnnotation) : void
+    + SetColor(color:Color) : void
+    + SetLineWidth(lineWidth:float) : void
+    + Draw(targets:IList<Connection>) : void
+    + Redraw() : void
+    # <<override>> InstantiateChild(isActive:bool) : ConnectionAnnotation
+    - ApplyColor(color:Color) : void
+    - ApplyLineWidth(lineWidth:float) : void
+}
+"ListAnnotation`1" "<ConnectionAnnotation>" <|-- ConnectionListAnnotation
+@enduml

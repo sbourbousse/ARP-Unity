@@ -1,0 +1,75 @@
+@startuml
+class Status {
+    + Status(ptr:IntPtr, isOwner:bool)
+    # <<override>> DeleteMpPtr() : void
+    - _ok : bool?
+    - _rawCode : int?
+    + AssertOk() : void
+    + Ok() : bool
+    + Code() : StatusCode
+    + RawCode() : int
+    + <<override>> ToString() : string
+    + {static} Build(code:StatusCode, message:string, isOwner:bool) : Status
+    + {static} Ok(isOwner:bool) : Status
+    + {static} Cancelled(message:string, isOwner:bool) : Status
+    + {static} Unknown(message:string, isOwner:bool) : Status
+    + {static} InvalidArgument(message:string, isOwner:bool) : Status
+    + {static} DeadlineExceeded(message:string, isOwner:bool) : Status
+    + {static} NotFound(message:string, isOwner:bool) : Status
+    + {static} AlreadyExists(message:string, isOwner:bool) : Status
+    + {static} PermissionDenied(message:string, isOwner:bool) : Status
+    + {static} ResourceExhausted(message:string, isOwner:bool) : Status
+    + {static} FailedPrecondition(message:string, isOwner:bool) : Status
+    + {static} Aborted(message:string, isOwner:bool) : Status
+    + {static} OutOfRange(message:string, isOwner:bool) : Status
+    + {static} Unimplemented(message:string, isOwner:bool) : Status
+    + {static} Internal(message:string, isOwner:bool) : Status
+    + {static} Unavailable(message:string, isOwner:bool) : Status
+    + {static} DataLoss(message:string, isOwner:bool) : Status
+    + {static} Unauthenticated(message:string, isOwner:bool) : Status
+}
+enum StatusCode {
+    Ok= 0,
+    Cancelled= 1,
+    Unknown= 2,
+    InvalidArgument= 3,
+    DeadlineExceeded= 4,
+    NotFound= 5,
+    AlreadyExists= 6,
+    PermissionDenied= 7,
+    ResourceExhausted= 8,
+    FailedPrecondition= 9,
+    Aborted= 10,
+    OutOfRange= 11,
+    Unimplemented= 12,
+    Internal= 13,
+    Unavailable= 14,
+    DataLoss= 15,
+    Unauthenticated= 16,
+}
+class StatusArgs <<struct>> {
+    - <<readonly>> _code : StatusCode
+    - <<readonly>> _message : IntPtr
+    - StatusArgs(code:StatusCode, message:string)
+    + {static} Ok() : StatusArgs
+    + {static} Cancelled(message:string) : StatusArgs
+    + {static} Unknown(message:string) : StatusArgs
+    + {static} InvalidArgument(message:string) : StatusArgs
+    + {static} DeadlineExceeded(message:string) : StatusArgs
+    + {static} NotFound(message:string) : StatusArgs
+    + {static} AlreadyExists(message:string) : StatusArgs
+    + {static} PermissionDenied(message:string) : StatusArgs
+    + {static} ResourceExhausted(message:string) : StatusArgs
+    + {static} FailedPrecondition(message:string) : StatusArgs
+    + {static} Aborted(message:string) : StatusArgs
+    + {static} OutOfRange(message:string) : StatusArgs
+    + {static} Unimplemented(message:string) : StatusArgs
+    + {static} Internal(message:string) : StatusArgs
+    + {static} Unavailable(message:string) : StatusArgs
+    + {static} DataLoss(message:string) : StatusArgs
+    + {static} Unauthenticated(message:string) : StatusArgs
+}
+MpResourceHandle <|-- Status
+Status +-- StatusCode
+Status +-- StatusArgs
+@enduml

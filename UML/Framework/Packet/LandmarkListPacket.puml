@@ -1,0 +1,10 @@
+@startuml
+class LandmarkListPacket {
+    + LandmarkListPacket()
+    + LandmarkListPacket(ptr:IntPtr, isOwner:bool)
+    + At(timestamp:Timestamp) : LandmarkListPacket
+    + <<override>> Get() : LandmarkList
+    + <<override>> Consume() : StatusOr<LandmarkList>
+}
+"Packet`1" "<LandmarkList>" <|-- LandmarkListPacket
+@enduml

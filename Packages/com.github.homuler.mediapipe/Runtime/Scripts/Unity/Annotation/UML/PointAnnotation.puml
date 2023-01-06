@@ -1,0 +1,21 @@
+@startuml
+class PointAnnotation {
+    - _color : Color
+    - _radius : float = 15.0f
+    - OnEnable() : void
+    - OnDisable() : void
+    + SetColor(color:Color) : void
+    + SetRadius(radius:float) : void
+    + Draw(position:Vector3) : void
+    + Draw(target:Landmark, scale:Vector3, visualizeZ:bool) : void
+    + Draw(target:NormalizedLandmark, visualizeZ:bool) : void
+    + Draw(target:NormalizedPoint2D) : void
+    + Draw(target:Point3D, focalLength:Vector2, principalPoint:Vector2, zScale:float, visualizeZ:bool) : void
+    + Draw(target:AnnotatedKeyPoint, focalLength:Vector2, principalPoint:Vector2, zScale:float, visualizeZ:bool) : void
+    + Draw(target:mplt.RelativeKeypoint, threshold:float) : void
+    - ApplyColor(color:Color) : void
+    - ApplyRadius(radius:float) : void
+    - GetColor(score:float, threshold:float) : Color
+}
+HierarchicalAnnotation <|-- PointAnnotation
+@enduml

@@ -1,0 +1,11 @@
+@startuml
+class StatusOrImageFrame {
+    + StatusOrImageFrame(ptr:IntPtr)
+    # <<override>> DeleteMpPtr() : void
+    - _status : Status
+    + <<override>> status : Status <<get>>
+    + <<override>> Ok() : bool
+    + <<override>> Value() : ImageFrame
+}
+"StatusOr`1" "<ImageFrame>" <|-- StatusOrImageFrame
+@enduml

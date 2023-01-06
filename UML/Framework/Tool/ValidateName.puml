@@ -1,0 +1,19 @@
+@startuml
+class Internal <<static>> <<partial>> {
+    + <<const>> MaxCollectionItemId : int = 10000
+}
+class Tool <<static>> <<partial>> {
+    - <<const>> _NameRegex : string = "[a-z_][a-z0-9_]*"
+    - <<const>> _NumberRegex : string = "(0|[1-9][0-9]*)"
+    - <<const>> _TagRegex : string = "[A-Z_][A-Z0-9_]*"
+    - {static} <<readonly>> _TagAndNameRegex : string
+    - {static} <<readonly>> _TagIndexNameRegex : string
+    - {static} <<readonly>> _TagIndexRegex : string
+    + {static} ValidateName(name:string) : void
+    + {static} ValidateNumber(number:string) : void
+    + {static} ValidateTag(tag:string) : void
+    + {static} ParseTagAndName(tagAndName:string, tag:string, name:string) : void
+    + {static} ParseTagIndexName(tagIndexName:string, tag:string, index:int, name:string) : void
+    + {static} ParseTagIndex(tagIndex:string, tag:string, index:int) : void
+}
+@enduml

@@ -1,0 +1,18 @@
+@startuml
+class FaceLandmarkListAnnotation <<sealed>> {
+    - _landmarkListAnnotation : PointListAnnotation
+    - _connectionListAnnotation : ConnectionListAnnotation
+    - <<const>> _LandmarkCount : int = 468
+    - <<readonly>> _connections : List<(int, int)>
+    + <<override>> isMirrored : bool <<set>>
+    + <<override>> rotationAngle : RotationAngle <<set>>
+    - Start() : void
+    + SetLandmarkColor(landmarkColor:Color) : void
+    + SetLandmarkRadius(landmarkRadius:float) : void
+    + SetConnectionColor(connectionColor:Color) : void
+    + SetConnectionWidth(connectionWidth:float) : void
+    + Draw(target:IList<NormalizedLandmark>, visualizeZ:bool) : void
+    + Draw(target:NormalizedLandmarkList, visualizeZ:bool) : void
+}
+HierarchicalAnnotation <|-- FaceLandmarkListAnnotation
+@enduml

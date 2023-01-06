@@ -1,0 +1,15 @@
+@startuml
+class DetectionListAnnotation <<sealed>> {
+    - _lineWidth : float = 1.0f
+    - _keypointRadius : float = 15.0f
+    - OnValidate() : void
+    + SetLineWidth(lineWidth:float) : void
+    + SetKeypointRadius(keypointRadius:float) : void
+    + Draw(targets:IList<Detection>, threshold:float) : void
+    + Draw(target:DetectionList, threshold:float) : void
+    # <<override>> InstantiateChild(isActive:bool) : DetectionAnnotation
+    - ApplyLineWidth(lineWidth:float) : void
+    - ApplyKeypointRadius(keypointRadius:float) : void
+}
+"ListAnnotation`1" "<DetectionAnnotation>" <|-- DetectionListAnnotation
+@enduml

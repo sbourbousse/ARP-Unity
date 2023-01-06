@@ -1,0 +1,20 @@
+@startuml
+class PointListAnnotation {
+    - _color : Color
+    - _radius : float = 15.0f
+    - OnValidate() : void
+    + SetColor(color:Color) : void
+    + SetRadius(radius:float) : void
+    + Draw(targets:IList<Vector3>) : void
+    + Draw(targets:IList<Landmark>, scale:Vector3, visualizeZ:bool) : void
+    + Draw(targets:LandmarkList, scale:Vector3, visualizeZ:bool) : void
+    + Draw(targets:IList<NormalizedLandmark>, visualizeZ:bool) : void
+    + Draw(targets:NormalizedLandmarkList, visualizeZ:bool) : void
+    + Draw(targets:IList<AnnotatedKeyPoint>, focalLength:Vector2, principalPoint:Vector2, zScale:float, visualizeZ:bool) : void
+    + Draw(targets:IList<mplt.RelativeKeypoint>, threshold:float) : void
+    # <<override>> InstantiateChild(isActive:bool) : PointAnnotation
+    - ApplyColor(color:Color) : void
+    - ApplyRadius(radius:float) : void
+}
+"ListAnnotation`1" "<PointAnnotation>" <|-- PointListAnnotation
+@enduml

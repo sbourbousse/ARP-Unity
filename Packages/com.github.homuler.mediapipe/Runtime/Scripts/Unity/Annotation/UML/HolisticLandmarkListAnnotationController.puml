@@ -1,0 +1,22 @@
+@startuml
+class HolisticLandmarkListAnnotationController {
+    - _visualizeZ : bool = false
+    - _circleVertices : int = 128
+    - _currentFaceLandmarkList : IList<NormalizedLandmark>
+    - _currentPoseLandmarkList : IList<NormalizedLandmark>
+    - _currentLeftHandLandmarkList : IList<NormalizedLandmark>
+    - _currentRightHandLandmarkList : IList<NormalizedLandmark>
+    + DrawNow(faceLandmarkList:IList<NormalizedLandmark>, poseLandmarkList:IList<NormalizedLandmark>, leftHandLandmarkList:IList<NormalizedLandmark>, rightHandLandmarkList:IList<NormalizedLandmark>) : void
+    + DrawNow(faceLandmarkList:NormalizedLandmarkList, poseLandmarkList:NormalizedLandmarkList, leftHandLandmarkList:NormalizedLandmarkList, rightHandLandmarkList:NormalizedLandmarkList) : void
+    + DrawFaceLandmarkListLater(faceLandmarkList:IList<NormalizedLandmark>) : void
+    + DrawFaceLandmarkListLater(faceLandmarkList:NormalizedLandmarkList) : void
+    + DrawPoseLandmarkListLater(poseLandmarkList:IList<NormalizedLandmark>) : void
+    + DrawPoseLandmarkListLater(poseLandmarkList:NormalizedLandmarkList) : void
+    + DrawLeftHandLandmarkListLater(leftHandLandmarkList:IList<NormalizedLandmark>) : void
+    + DrawLeftHandLandmarkListLater(leftHandLandmarkList:NormalizedLandmarkList) : void
+    + DrawRightHandLandmarkListLater(rightHandLandmarkList:IList<NormalizedLandmark>) : void
+    + DrawRightHandLandmarkListLater(rightHandLandmarkList:NormalizedLandmarkList) : void
+    # <<override>> SyncNow() : void
+}
+"AnnotationController`1" "<HolisticLandmarkListAnnotation>" <|-- HolisticLandmarkListAnnotationController
+@enduml

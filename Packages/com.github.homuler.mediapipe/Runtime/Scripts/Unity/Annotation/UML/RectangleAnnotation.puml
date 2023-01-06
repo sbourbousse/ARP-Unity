@@ -1,0 +1,21 @@
+@startuml
+class RectangleAnnotation {
+    - _lineRenderer : LineRenderer
+    - _color : Color
+    - _lineWidth : float = 1.0f
+    - {static} <<readonly>> _EmptyPositions : Vector3[]
+    - OnEnable() : void
+    - OnDisable() : void
+    - OnValidate() : void
+    + SetColor(color:Color) : void
+    + SetLineWidth(lineWidth:float) : void
+    + Draw(positions:Vector3[]) : void
+    + Draw(target:Rect, imageSize:Vector2Int) : void
+    + Draw(target:NormalizedRect) : void
+    + Draw(target:LocationData, imageSize:Vector2Int) : void
+    + Draw(target:LocationData) : void
+    - ApplyColor(color:Color) : void
+    - ApplyLineWidth(lineWidth:float) : void
+}
+HierarchicalAnnotation <|-- RectangleAnnotation
+@enduml

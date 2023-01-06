@@ -1,0 +1,13 @@
+@startuml
+class IntPacket {
+    + IntPacket()
+    + IntPacket(ptr:IntPtr, isOwner:bool)
+    + IntPacket(value:int)
+    + IntPacket(value:int, timestamp:Timestamp)
+    + At(timestamp:Timestamp) : IntPacket
+    + <<override>> Get() : int
+    + <<override>> Consume() : StatusOr<int>
+    + <<override>> ValidateAsType() : Status
+}
+"Packet`1" "<int>" <|-- IntPacket
+@enduml

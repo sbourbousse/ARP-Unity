@@ -1,0 +1,13 @@
+@startuml
+class Tool <<static>> <<partial>> {
+    + {static} GetUnusedNodeName(config:CalculatorGraphConfig, nodeNameBase:string) : string
+    + {static} GetUnusedSidePacketName(config:CalculatorGraphConfig, inputSidePacketNameBase:string) : string
+    + {static} GetUnusedStreamName(config:CalculatorGraphConfig, streamNameBase:string) : string
+    + {static} CanonicalNodeName(graphConfig:CalculatorGraphConfig, nodeId:int) : string
+    + {static} ParseNameFromStream(stream:string) : string
+    + {static} ParseTagIndex(tagIndex:string) : (string, int)
+    + {static} ParseTagIndexFromStream(stream:string) : (string, int)
+    + {static} CatTag(tag:string, index:int) : string
+    + {static} CatStream(tagIndex:(string, int), name:string) : string
+}
+@enduml

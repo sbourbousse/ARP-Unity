@@ -1,0 +1,12 @@
+@startuml
+class SidePacket {
+    + SidePacket()
+    # <<override>> DeleteMpPtr() : void
+    + size : int <<get>>
+    + At(key:string) : TPacket
+    + Emplace(key:string, packet:Packet<T>) : void
+    + Erase(key:string) : int
+    + Clear() : void
+}
+MpResourceHandle <|-- SidePacket
+@enduml

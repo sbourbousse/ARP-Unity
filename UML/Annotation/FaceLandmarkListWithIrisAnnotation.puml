@@ -1,0 +1,26 @@
+@startuml
+class FaceLandmarkListWithIrisAnnotation <<sealed>> {
+    - _faceLandmarkListAnnotation : FaceLandmarkListAnnotation
+    - _leftIrisLandmarkListAnnotation : IrisLandmarkListAnnotation
+    - _rightIrisLandmarkListAnnotation : IrisLandmarkListAnnotation
+    - <<const>> _FaceLandmarkCount : int = 468
+    - <<const>> _IrisLandmarkCount : int = 5
+    + <<override>> isMirrored : bool <<set>>
+    + <<override>> rotationAngle : RotationAngle <<set>>
+    + SetFaceLandmarkColor(color:Color) : void
+    + SetIrisLandmarkColor(color:Color) : void
+    + SetFaceLandmarkRadius(radius:float) : void
+    + SetIrisLandmarkRadius(radius:float) : void
+    + SetFaceConnectionColor(color:Color) : void
+    + SetFaceConnectionWidth(width:float) : void
+    + SetIrisCircleColor(color:Color) : void
+    + SetIrisCircleWidth(width:float) : void
+    + Draw(target:IList<NormalizedLandmark>, visualizeZ:bool, circleVertices:int) : void
+    + Draw(target:NormalizedLandmarkList, visualizeZ:bool, circleVertices:int) : void
+    + DrawFaceLandmarkList(target:IList<NormalizedLandmark>, visualizeZ:bool) : void
+    + DrawLeftIrisLandmarkList(target:IList<NormalizedLandmark>, visualizeZ:bool, circleVertices:int) : void
+    + DrawRightIrisLandmarkList(target:IList<NormalizedLandmark>, visualizeZ:bool, circleVertices:int) : void
+    - {static} PartitionLandmarkList(landmarks:IList<NormalizedLandmark>) : (IList<NormalizedLandmark>, IList<NormalizedLandmark>, IList<NormalizedLandmark>)
+}
+HierarchicalAnnotation <|-- FaceLandmarkListWithIrisAnnotation
+@enduml

@@ -1,0 +1,27 @@
+@startuml
+class CuboidListAnnotation {
+    - _pointColor : Color
+    - _lineColor : Color
+    - _lineWidth : float = 1.0f
+    - _arrowCapScale : float = 2.0f
+    - _arrowLengthScale : float = 1.0f
+    - _arrowWidth : float = 1.0f
+    - OnValidate() : void
+    + SetPointColor(pointColor:Color) : void
+    + SetLineColor(lineColor:Color) : void
+    + SetLineWidth(lineWidth:float) : void
+    + SetArrowCapScale(arrowCapScale:float) : void
+    + SetArrowLengthScale(arrowLengthScale:float) : void
+    + SetArrowWidth(arrowWidth:float) : void
+    + Draw(targets:IList<ObjectAnnotation>, focalLength:Vector2, principalPoint:Vector2, scale:float, visualizeZ:bool) : void
+    + Draw(target:FrameAnnotation, focalLength:Vector2, principalPoint:Vector2, scale:float, visualizeZ:bool) : void
+    # <<override>> InstantiateChild(isActive:bool) : CuboidAnnotation
+    - ApplyPointColor(pointColor:Color) : void
+    - ApplyLineColor(lineColor:Color) : void
+    - ApplyLineWidth(lineWidth:float) : void
+    - ApplyArrowCapScale(arrowCapScale:float) : void
+    - ApplyArrowLengthScale(arrowLengthScale:float) : void
+    - ApplyArrowWidth(arrowWidth:float) : void
+}
+"ListAnnotation`1" "<CuboidAnnotation>" <|-- CuboidListAnnotation
+@enduml

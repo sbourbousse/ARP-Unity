@@ -1,0 +1,16 @@
+@startuml
+class FloatArrayPacket {
+    - _length : int
+    + length : int <<get>> <<set>>
+    + FloatArrayPacket()
+    + FloatArrayPacket(ptr:IntPtr, isOwner:bool)
+    + FloatArrayPacket(value:float[])
+    + FloatArrayPacket(value:float[], timestamp:Timestamp)
+    + At(timestamp:Timestamp) : FloatArrayPacket
+    + <<override>> Get() : float[]
+    + GetArrayPtr() : IntPtr
+    + <<override>> Consume() : StatusOr<float[]>
+    + <<override>> ValidateAsType() : Status
+}
+"Packet`1" "<float[]>" <|-- FloatArrayPacket
+@enduml

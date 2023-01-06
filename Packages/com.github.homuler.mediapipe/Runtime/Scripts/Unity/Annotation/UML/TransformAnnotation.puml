@@ -1,0 +1,14 @@
+@startuml
+class TransformAnnotation <<sealed>> {
+    - _xArrow : Arrow
+    - _yArrow : Arrow
+    - _zArrow : Arrow
+    + origin : Vector3 <<get>> <<set>>
+    + SetArrowCapScale(arrowCapScale:float) : void
+    + SetArrowWidth(arrowWidth:float) : void
+    + Draw(rotation:Quaternion, scale:Vector3, visualizeZ:bool) : void
+    + Draw(target:ObjectAnnotation, position:Vector3, arrowLengthScale:float, visualizeZ:bool) : void
+    - DrawArrow(arrow:Arrow, vec:Vector3, visualizeZ:bool) : void
+}
+HierarchicalAnnotation <|-- TransformAnnotation
+@enduml

@@ -1,0 +1,10 @@
+@startuml
+class NormalizedLandmarkListVectorPacket {
+    + NormalizedLandmarkListVectorPacket()
+    + NormalizedLandmarkListVectorPacket(ptr:IntPtr, isOwner:bool)
+    + At(timestamp:Timestamp) : NormalizedLandmarkListVectorPacket
+    + <<override>> Get() : List<NormalizedLandmarkList>
+    + <<override>> Consume() : StatusOr<List<NormalizedLandmarkList>>
+}
+"Packet`1" "<List<NormalizedLandmarkList>>" <|-- NormalizedLandmarkListVectorPacket
+@enduml

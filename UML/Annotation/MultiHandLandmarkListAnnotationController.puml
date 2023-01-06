@@ -1,0 +1,12 @@
+@startuml
+class MultiHandLandmarkListAnnotationController {
+    - _visualizeZ : bool = false
+    - _currentHandLandmarkLists : IList<NormalizedLandmarkList>
+    - _currentHandedness : IList<ClassificationList>
+    + DrawNow(handLandmarkLists:IList<NormalizedLandmarkList>, handedness:IList<ClassificationList>) : void
+    + DrawLater(handLandmarkLists:IList<NormalizedLandmarkList>) : void
+    + DrawLater(handedness:IList<ClassificationList>) : void
+    # <<override>> SyncNow() : void
+}
+"AnnotationController`1" "<MultiHandLandmarkListAnnotation>" <|-- MultiHandLandmarkListAnnotationController
+@enduml

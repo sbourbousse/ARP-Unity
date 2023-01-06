@@ -1,0 +1,12 @@
+@startuml
+class LabelAnnotation {
+    - _labelText : Text
+    - _backgroundTransform : Transform
+    + Draw(text:string, position:Vector3, color:Color, maxWidth:float, maxHeight:float) : void
+    - GetFontSize(text:string, maxWidth:float, maxHeight:float) : int
+    - DecideTextColor(backgroundColor:Color) : Color
+    - CalcRelativeLuminance(color:Color) : float
+    - CalcContrastRatio(lighter:Color, darker:Color) : float
+}
+HierarchicalAnnotation <|-- LabelAnnotation
+@enduml

@@ -1,0 +1,10 @@
+@startuml
+class FaceGeometryPacket {
+    + FaceGeometryPacket()
+    + FaceGeometryPacket(ptr:IntPtr, isOwner:bool)
+    + At(timestamp:Timestamp) : FaceGeometryPacket
+    + <<override>> Get() : FaceGeometry.FaceGeometry
+    + <<override>> Consume() : StatusOr<FaceGeometry.FaceGeometry>
+}
+"Packet`1" "<FaceGeometry.FaceGeometry>" <|-- FaceGeometryPacket
+@enduml

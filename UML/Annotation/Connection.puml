@@ -1,0 +1,7 @@
+@startuml
+class Connection {
+    + <<readonly>> start : HierarchicalAnnotation
+    + <<readonly>> end : HierarchicalAnnotation
+    + Connection(start:HierarchicalAnnotation, end:HierarchicalAnnotation)
+}
+@enduml
