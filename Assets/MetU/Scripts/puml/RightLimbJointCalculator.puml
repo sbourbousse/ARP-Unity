@@ -1,0 +1,8 @@
+@startuml
+class RightLimbJointCalculator {
+    + RightLimbJointCalculator(t:Transform)
+    + <<override>> Refresh() : void
+    + <<override>> Calc() : void
+}
+LimbJointCalculator <|-- RightLimbJointCalculator
+@enduml

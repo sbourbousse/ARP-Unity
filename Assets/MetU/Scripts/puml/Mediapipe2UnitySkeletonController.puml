@@ -1,0 +1,13 @@
+@startuml
+class Mediapipe2UnitySkeletonController {
+    - Start() : void
+    - Update() : void
+    + Refresh(target:LandmarkList, reverseCoordinates:bool) : void
+}
+class "HashSet`1"<T> {
+}
+MonoBehaviour <|-- Mediapipe2UnitySkeletonController
+Mediapipe2UnitySkeletonController --> "jointFactory" HumanJointFactory
+Mediapipe2UnitySkeletonController --> "calculators<HumanJointCalculator>" "HashSet`1"
+Mediapipe2UnitySkeletonController --> "_anim" Animator
+@enduml

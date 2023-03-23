@@ -1,0 +1,193 @@
+@startuml
+class HeadJointFactory {
+    + HeadJointFactory(anim:Animator)
+    + Generate() : HashSet<HumanJointCalculator>
+}
+HeadJointFactory --> "neckJointCalculator" NeckJointCalculator
+class HipCalculator {
+    + HipCalculator(t:Transform)
+    + <<override>> Calc() : void
+}
+HumanJointCalculator <|-- HipCalculator
+class HumanJointCalculator {
+    + HumanJointCalculator(t:Transform)
+    + Refresh(landmarkList:LandmarkList) : void
+    + <<virtual>> Calc() : void
+}
+HumanJointCalculator --> "obj" Transform
+HumanJointCalculator --> "_landmarkList" LandmarkList
+class HumanJointFactory {
+    + HumanJointFactory(anim:Animator)
+    + Generate() : HashSet<HumanJointCalculator>
+}
+HumanJointFactory --> "torsoJointFactory" TorsoJointFactory
+HumanJointFactory --> "limbsJointFactory" LimbsJointFactory
+HumanJointFactory --> "headJointFactory" HeadJointFactory
+class LeftAnkleCalculator {
+    + LeftAnkleCalculator(t:Transform)
+    + <<override>> Calc() : void
+}
+LeftLimbJointCalculator <|-- LeftAnkleCalculator
+class LeftElbowCalculator {
+    + LeftElbowCalculator(t:Transform)
+    + <<override>> Calc() : void
+}
+LeftLimbJointCalculator <|-- LeftElbowCalculator
+class LeftHipCalculator {
+    + LeftHipCalculator(t:Transform)
+    + <<override>> Calc() : void
+}
+LeftLimbJointCalculator <|-- LeftHipCalculator
+class LeftKneeCalculator {
+    + LeftKneeCalculator(t:Transform)
+    + <<override>> Calc() : void
+}
+LeftLimbJointCalculator <|-- LeftKneeCalculator
+class LeftLimbJointCalculator {
+    + LeftLimbJointCalculator(t:Transform)
+    + <<override>> Refresh() : void
+    + <<override>> Calc() : void
+}
+LimbJointCalculator <|-- LeftLimbJointCalculator
+class LeftLimbsJointFactory {
+    + LeftLimbsJointFactory(anim:Animator)
+    + Generate() : HashSet<HumanJointCalculator>
+}
+LeftLimbsJointFactory --> "leftShoulderCalculator" LeftShoulderCalculator
+LeftLimbsJointFactory --> "leftElbowCalculator" LeftElbowCalculator
+LeftLimbsJointFactory --> "leftWristCalculator" LeftWristCalculator
+LeftLimbsJointFactory --> "leftHipCalculator" LeftHipCalculator
+LeftLimbsJointFactory --> "leftKneeCalculator" LeftKneeCalculator
+LeftLimbsJointFactory --> "leftAnkleCalculator" LeftAnkleCalculator
+class LeftShoulderCalculator {
+    + LeftShoulderCalculator(t:Transform)
+    + <<override>> Calc() : void
+}
+LeftLimbJointCalculator <|-- LeftShoulderCalculator
+class LeftWristCalculator {
+    + LeftWristCalculator(t:Transform)
+    + <<override>> Calc() : void
+}
+LeftLimbJointCalculator <|-- LeftWristCalculator
+class LimbJointCalculator {
+    + LimbJointCalculator(t:Transform)
+    + <<virtual>> Refresh() : void
+    + <<override>> Calc() : void
+}
+HumanJointCalculator <|-- LimbJointCalculator
+LimbJointCalculator --> "v_hip_shoulder" Vector3
+LimbJointCalculator --> "v_shoulder_elbow" Vector3
+LimbJointCalculator --> "v_elbow_wrist" Vector3
+LimbJointCalculator --> "v_wrist_thumb" Vector3
+LimbJointCalculator --> "v_wrist_index" Vector3
+LimbJointCalculator --> "v_wrist_pinky" Vector3
+LimbJointCalculator --> "v_hip_knee" Vector3
+LimbJointCalculator --> "v_knee_ankle" Vector3
+LimbJointCalculator --> "v_ankle_heel" Vector3
+LimbJointCalculator --> "v_ankle_index" Vector3
+class LimbsJointFactory {
+    + LimbsJointFactory(anim:Animator)
+    + Generate() : HashSet<HumanJointCalculator>
+}
+LimbsJointFactory --> "rightLimbsJointFactory" RightLimbsJointFactory
+LimbsJointFactory --> "leftLimbsJointFactory" LeftLimbsJointFactory
+class Mediapipe2UnitySkeletonController {
+    - Start() : void
+    - Update() : void
+    + Refresh(target:LandmarkList, reverseCoordinates:bool) : void
+}
+class "HashSet`1"<T> {
+}
+MonoBehaviour <|-- Mediapipe2UnitySkeletonController
+Mediapipe2UnitySkeletonController --> "jointFactory" HumanJointFactory
+Mediapipe2UnitySkeletonController --> "calculators<HumanJointCalculator>" "HashSet`1"
+Mediapipe2UnitySkeletonController --> "_anim" Animator
+class Mediapipe2UnitySkeletonSolution {
+    + smoothLandmarks : bool <<get>> <<set>>
+    + refineFaceLandmarks : bool <<get>> <<set>>
+    + enableSegmentation : bool <<get>> <<set>>
+    + smoothSegmentation : bool <<get>> <<set>>
+    + minDetectionConfidence : float <<get>> <<set>>
+    + minTrackingConfidence : float <<get>> <<set>>
+    # <<override>> SetupScreen(imageSource:ImageSource) : void
+    # <<override>> OnStartRun() : void
+    # <<override>> AddTextureFrameToInputStream(textureFrame:TextureFrame) : void
+    # <<override>> WaitForNextValue() : IEnumerator
+    - OnPoseWorldLandmarksOutput(stream:object, eventArgs:OutputEventArgs<LandmarkList>) : void
+}
+class "ImageSourceSolution`1"<T> {
+}
+"ImageSourceSolution`1" "<HolisticTrackingGraph>" <|-- Mediapipe2UnitySkeletonSolution
+Mediapipe2UnitySkeletonSolution --> "_worldAnnotationArea" RectTransform
+Mediapipe2UnitySkeletonSolution --> "_poseDetectionAnnotationController" DetectionAnnotationController
+Mediapipe2UnitySkeletonSolution --> "_holisticAnnotationController" HolisticLandmarkListAnnotationController
+Mediapipe2UnitySkeletonSolution --> "_segmentationMaskAnnotationController" MaskAnnotationController
+Mediapipe2UnitySkeletonSolution --> "_poseRoiAnnotationController" NormalizedRectAnnotationController
+Mediapipe2UnitySkeletonSolution --> "_poseWorldLandmarksAnnotationController" PoseWorldLandmarkListAnnotationController
+Mediapipe2UnitySkeletonSolution --> "_mediapipe2UnitySkeletonController" Mediapipe2UnitySkeletonController
+class NeckJointCalculator {
+    + NeckJointCalculator(t:Transform)
+    + <<override>> Calc() : void
+}
+HumanJointCalculator <|-- NeckJointCalculator
+NeckJointCalculator --> "v_shoulder" Vector3
+NeckJointCalculator --> "v_mouth" Vector3
+NeckJointCalculator --> "v_shoulder_mouth" Vector3
+class RightAnkleCalculator {
+    + RightAnkleCalculator(t:Transform)
+    + <<override>> Calc() : void
+}
+RightLimbJointCalculator <|-- RightAnkleCalculator
+class RightElbowCalculator {
+    + RightElbowCalculator(t:Transform)
+    + <<override>> Calc() : void
+}
+RightLimbJointCalculator <|-- RightElbowCalculator
+class RightHipCalculator {
+    + RightHipCalculator(t:Transform)
+    + <<override>> Calc() : void
+}
+RightLimbJointCalculator <|-- RightHipCalculator
+class RightKneeCalculator {
+    + RightKneeCalculator(t:Transform)
+    + <<override>> Calc() : void
+}
+RightLimbJointCalculator <|-- RightKneeCalculator
+class RightLimbJointCalculator {
+    + RightLimbJointCalculator(t:Transform)
+    + <<override>> Refresh() : void
+    + <<override>> Calc() : void
+}
+LimbJointCalculator <|-- RightLimbJointCalculator
+class RightLimbsJointFactory {
+    + RightLimbsJointFactory(anim:Animator)
+    + Generate() : HashSet<HumanJointCalculator>
+}
+RightLimbsJointFactory --> "rightShoulderCalculator" RightShoulderCalculator
+RightLimbsJointFactory --> "rightElbowCalculator" RightElbowCalculator
+RightLimbsJointFactory --> "rightWristCalculator" RightWristCalculator
+RightLimbsJointFactory --> "rightHipCalculator" RightHipCalculator
+RightLimbsJointFactory --> "rightKneeCalculator" RightKneeCalculator
+RightLimbsJointFactory --> "rightAnkleCalculator" RightAnkleCalculator
+class RightShoulderCalculator {
+    + RightShoulderCalculator(t:Transform)
+    + <<override>> Calc() : void
+}
+RightLimbJointCalculator <|-- RightShoulderCalculator
+class RightWristCalculator {
+    + RightWristCalculator(t:Transform)
+    + <<override>> Calc() : void
+}
+RightLimbJointCalculator <|-- RightWristCalculator
+class SpineCalculator {
+    + SpineCalculator(t:Transform)
+    + <<override>> Calc() : void
+}
+HumanJointCalculator <|-- SpineCalculator
+class TorsoJointFactory {
+    + TorsoJointFactory(anim:Animator)
+    + Generate() : HashSet<HumanJointCalculator>
+}
+TorsoJointFactory --> "hipCalculator" HipCalculator
+TorsoJointFactory --> "spineCalculator" SpineCalculator
+@enduml

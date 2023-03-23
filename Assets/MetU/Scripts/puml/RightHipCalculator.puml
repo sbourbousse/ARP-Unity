@@ -1,0 +1,7 @@
+@startuml
+class RightHipCalculator {
+    + RightHipCalculator(t:Transform)
+    + <<override>> Calc() : void
+}
+RightLimbJointCalculator <|-- RightHipCalculator
+@enduml

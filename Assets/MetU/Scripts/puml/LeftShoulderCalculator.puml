@@ -1,0 +1,7 @@
+@startuml
+class LeftShoulderCalculator {
+    + LeftShoulderCalculator(t:Transform)
+    + <<override>> Calc() : void
+}
+LeftLimbJointCalculator <|-- LeftShoulderCalculator
+@enduml

@@ -1,0 +1,9 @@
+@startuml
+class HumanJointCalculator {
+    + HumanJointCalculator(t:Transform)
+    + Refresh(landmarkList:LandmarkList) : void
+    + <<virtual>> Calc() : void
+}
+HumanJointCalculator --> "obj" Transform
+HumanJointCalculator --> "_landmarkList" LandmarkList
+@enduml

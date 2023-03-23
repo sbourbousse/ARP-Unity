@@ -1,0 +1,10 @@
+@startuml
+class NeckJointCalculator {
+    + NeckJointCalculator(t:Transform)
+    + <<override>> Calc() : void
+}
+HumanJointCalculator <|-- NeckJointCalculator
+NeckJointCalculator --> "v_shoulder" Vector3
+NeckJointCalculator --> "v_mouth" Vector3
+NeckJointCalculator --> "v_shoulder_mouth" Vector3
+@enduml

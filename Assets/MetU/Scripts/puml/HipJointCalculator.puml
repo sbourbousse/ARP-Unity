@@ -1,0 +1,7 @@
+@startuml
+class HipCalculator {
+    + HipCalculator(t:Transform)
+    + <<override>> Calc() : void
+}
+HumanJointCalculator <|-- HipCalculator
+@enduml

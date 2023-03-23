@@ -1,0 +1,8 @@
+@startuml
+class TorsoJointFactory {
+    + TorsoJointFactory(anim:Animator)
+    + Generate() : HashSet<HumanJointCalculator>
+}
+TorsoJointFactory --> "hipCalculator" HipCalculator
+TorsoJointFactory --> "spineCalculator" SpineCalculator
+@enduml

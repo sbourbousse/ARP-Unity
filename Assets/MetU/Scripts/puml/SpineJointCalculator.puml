@@ -1,0 +1,7 @@
+@startuml
+class SpineCalculator {
+    + SpineCalculator(t:Transform)
+    + <<override>> Calc() : void
+}
+HumanJointCalculator <|-- SpineCalculator
+@enduml

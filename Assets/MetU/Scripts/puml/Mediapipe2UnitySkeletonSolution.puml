@@ -1,0 +1,25 @@
+@startuml
+class Mediapipe2UnitySkeletonSolution {
+    + smoothLandmarks : bool <<get>> <<set>>
+    + refineFaceLandmarks : bool <<get>> <<set>>
+    + enableSegmentation : bool <<get>> <<set>>
+    + smoothSegmentation : bool <<get>> <<set>>
+    + minDetectionConfidence : float <<get>> <<set>>
+    + minTrackingConfidence : float <<get>> <<set>>
+    # <<override>> SetupScreen(imageSource:ImageSource) : void
+    # <<override>> OnStartRun() : void
+    # <<override>> AddTextureFrameToInputStream(textureFrame:TextureFrame) : void
+    # <<override>> WaitForNextValue() : IEnumerator
+    - OnPoseWorldLandmarksOutput(stream:object, eventArgs:OutputEventArgs<LandmarkList>) : void
+}
+class "ImageSourceSolution`1"<T> {
+}
+"ImageSourceSolution`1" "<HolisticTrackingGraph>" <|-- Mediapipe2UnitySkeletonSolution
+Mediapipe2UnitySkeletonSolution --> "_worldAnnotationArea" RectTransform
+Mediapipe2UnitySkeletonSolution --> "_poseDetectionAnnotationController" DetectionAnnotationController
+Mediapipe2UnitySkeletonSolution --> "_holisticAnnotationController" HolisticLandmarkListAnnotationController
+Mediapipe2UnitySkeletonSolution --> "_segmentationMaskAnnotationController" MaskAnnotationController
+Mediapipe2UnitySkeletonSolution --> "_poseRoiAnnotationController" NormalizedRectAnnotationController
+Mediapipe2UnitySkeletonSolution --> "_poseWorldLandmarksAnnotationController" PoseWorldLandmarkListAnnotationController
+Mediapipe2UnitySkeletonSolution --> "_mediapipe2UnitySkeletonController" Mediapipe2UnitySkeletonController
+@enduml

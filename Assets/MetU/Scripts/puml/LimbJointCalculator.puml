@@ -1,0 +1,18 @@
+@startuml
+class LimbJointCalculator {
+    + LimbJointCalculator(t:Transform)
+    + <<virtual>> Refresh() : void
+    + <<override>> Calc() : void
+}
+HumanJointCalculator <|-- LimbJointCalculator
+LimbJointCalculator --> "v_hip_shoulder" Vector3
+LimbJointCalculator --> "v_shoulder_elbow" Vector3
+LimbJointCalculator --> "v_elbow_wrist" Vector3
+LimbJointCalculator --> "v_wrist_thumb" Vector3
+LimbJointCalculator --> "v_wrist_index" Vector3
+LimbJointCalculator --> "v_wrist_pinky" Vector3
+LimbJointCalculator --> "v_hip_knee" Vector3
+LimbJointCalculator --> "v_knee_ankle" Vector3
+LimbJointCalculator --> "v_ankle_heel" Vector3
+LimbJointCalculator --> "v_ankle_index" Vector3
+@enduml

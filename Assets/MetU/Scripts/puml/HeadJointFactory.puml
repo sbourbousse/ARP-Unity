@@ -1,0 +1,7 @@
+@startuml
+class HeadJointFactory {
+    + HeadJointFactory(anim:Animator)
+    + Generate() : HashSet<HumanJointCalculator>
+}
+HeadJointFactory --> "neckJointCalculator" NeckJointCalculator
+@enduml

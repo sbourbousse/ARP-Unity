@@ -1,0 +1,8 @@
+@startuml
+class LimbsJointFactory {
+    + LimbsJointFactory(anim:Animator)
+    + Generate() : HashSet<HumanJointCalculator>
+}
+LimbsJointFactory --> "rightLimbsJointFactory" RightLimbsJointFactory
+LimbsJointFactory --> "leftLimbsJointFactory" LeftLimbsJointFactory
+@enduml
