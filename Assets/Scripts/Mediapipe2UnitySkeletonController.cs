@@ -22,7 +22,7 @@ namespace Mediapipe.Unity
 			jointFactory = new HumanJointFactory(_anim);
 			calculators = jointFactory.Generate();
 			humanController = new HumanController();
-			avatarActionController = new AvatarActionController();
+			avatarActionController = GameObject.FindWithTag("Solution").GetComponent<AvatarActionController>();
 		}
 
 		private void Update()
@@ -35,9 +35,9 @@ namespace Mediapipe.Unity
 			foreach (var trigger in triggers)
 			{
 				if(trigger.Item2.TriggerName == "close-hand" && trigger.Item1 == HumanPart.LeftHand)
-					avatarActionController.TriggerSword(HumanPartSide.Left);
+					avatarActionController.PutNextShirtOn();
 				if(trigger.Item2.TriggerName == "close-hand" && trigger.Item1 == HumanPart.RightHand)
-					avatarActionController.TriggerSword(HumanPartSide.Right);
+					avatarActionController.PutPreviousShirtOn();
 					
 			}
 		}
@@ -67,72 +67,4 @@ namespace Mediapipe.Unity
 			humanController.UpdateHandsLandmarks(landmarkList, side);
 		}
     }
-
-	public class AvatarActionController {
-		bool IsSwordLeftActive = false;
-		bool IsSwordRightActive = false;
-		public AvatarActionController()
-		{
-			IsSwordLeftActive = true;
-			IsSwordRightActive = true;
-			RightSword = GameObject.FindWithTag("rightsword");
-			LeftSword = GameObject.FindWithTag("leftsword");
-
-		}
-		public bool IsSwordActive { get; set; }
-		public GameObject RightSword { get; set; }
-		public GameObject LeftSword { get; set; }
-		public string GetTagBySide(HumanPartSide side)
-		{
-			switch (side)
-			{
-				case HumanPartSide.Left:
-					return "leftsword";
-				case HumanPartSide.Right:
-					return "rightsword";
-				default:
-					throw new ArgumentOutOfRangeException(nameof(side), side, null);
-
-			}
-		}
-		public void TriggerSword(HumanPartSide side)
-		{
-			bool swordActive = false;
-			if (side == HumanPartSide.Left)
-			{
-				swordActive = IsSwordLeftActive;
-				IsSwordLeftActive = !IsSwordLeftActive;
-			}
-			else if (side == HumanPartSide.Right)
-			{
-				swordActive = IsSwordRightActive;
-				IsSwordRightActive = !IsSwordRightActive;
-			}
-			
-			if (swordActive)
-			{
-				HideSword(side);
-			}
-			else
-			{
-				ShowSword(side);
-			}
-		}
-
-		public void ShowSword(HumanPartSide side)
-		{
-			if (side == HumanPartSide.Left)
-				LeftSword.SetActive(true);
-			else if (side == HumanPartSide.Right)
-				RightSword.SetActive(true);
-		}
-
-		public void HideSword(HumanPartSide side)
-		{
-			if (side == HumanPartSide.Left)
-				LeftSword.SetActive(false);
-			else if (side == HumanPartSide.Right)
-				RightSword.SetActive(false);
-		}
-	}
 } 	

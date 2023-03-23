@@ -19,6 +19,7 @@ TagManager:
   - Solution
   - rightsword
   - leftsword
+  - avatar-shirt
   layers:
   - Default
   - TransparentFX
