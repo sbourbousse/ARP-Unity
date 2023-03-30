@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 namespace Mediapipe.Unity
 {
@@ -11,7 +12,7 @@ namespace Mediapipe.Unity
     {
         public HumanPartSide Side;
 
-        public HumanHandController(HumanPartSide side) : base()
+        public HumanHandController(HumanPart humanPart, HumanPartSide side) : base(humanPart)
         {
             Side = side;
             var triggers = new List<HumanPartTrigger>() {
@@ -20,11 +21,23 @@ namespace Mediapipe.Unity
             SetTriggers(triggers);
         }
 
-        public new void OnUpdateLandmarks() {
+        public override void OnUpdateLandmarks() {
             if(CheckHandIsClosed()) {
-                GetTrigger("close-hand").Activate();
+                var closeHandEmitter = GetTrigger("close-hand");
+				closeHandEmitter.Activate();
             }
         }
+		
+		public List<Tuple<HumanPart, HumanPartTrigger>> GetEmittingTriggers() {
+			var emittingTriggers = new List<Tuple<HumanPart, HumanPartTrigger>>();
+			foreach(var trigger in triggerList) {
+				if(trigger.GetEmitter()) {
+					emittingTriggers.Add(new Tuple<HumanPart, HumanPartTrigger>(HumanPart, trigger));
+				}
+			}
+			return emittingTriggers;
+		}
+
 
         public bool CheckHandIsClosed() {
             if (landmarkList == null || landmarkList.Landmark.Count == 0)

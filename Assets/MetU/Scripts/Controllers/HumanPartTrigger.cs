@@ -6,30 +6,26 @@ namespace Mediapipe.Unity
 {
     public class HumanPartTrigger
     {
-        private int startTime;
-        private int endTime;
+        private DateTime? startTime;
+        private DateTime? endTime;
         private bool emiting;
         public string TriggerName;
         public bool Triggered = false;
-        public int Duration;
+        public TimeSpan? Duration;
         private int triggerCount;
         private float minTriggerBysecond;
         public HumanPartTrigger(string triggerName, int duration, float minimalTriggerBysecond = 1)
         {
             TriggerName = triggerName;
-            Duration = duration;
-            startTime = 0;
-            endTime = 0;
+            Duration = TimeSpan.FromMilliseconds(duration);
+            startTime = null;
+            endTime = null;
             emiting = false;
             triggerCount = 0;
             minTriggerBysecond = minimalTriggerBysecond;
         }
         
         public void Activate() {
-            if(Triggered) {
-                Debug.Log("Trigger " + TriggerName + " is already active");
-                return;
-            }
             Trigger();
         }
 
@@ -43,29 +39,58 @@ namespace Mediapipe.Unity
 
         public void Trigger()
         {
+            DateTime currentTime = DateTime.Now;
             Triggered = true;
             triggerCount++;
-            int currentTime = DateTime.Now.Millisecond;
-            if(startTime == 0)
-                startTime = currentTime;
-
-            if(currentTime - startTime > Duration)
+            if(startTime == null)
+                StartClock();
+            if(endTime == null && GetCurrentDuration() > Duration)
             {
-                Triggered = false;
-                endTime = currentTime;
+                Debug.Log("ACTIVATE EMITTER");
+                EndClock();
+                ActivateEmitter();
+                return;
             }
         }
 
+        private TimeSpan? GetCurrentDuration() {
+            var duration = DateTime.Now - startTime;
+            if (duration < TimeSpan.Zero) 
+                return null;
+            return duration;
+        }
+
+        private void StartClock()
+        {
+            Debug.Log("New trigger " + TriggerName + " with duration " + Duration + "ms");
+            startTime = DateTime.Now;
+        }
+
+        private void EndClock()
+        {
+            endTime = DateTime.Now;
+        }
+
+
         private void ActivateEmitter() 
         {
+            Deactivate();
             emiting = true;
         }
 
         public bool GetEmitter()
         {
             if(!emiting) return false;
-            emiting = false;
+            Reset();
             return true;
+        }
+
+        public void Reset() {
+            emiting = false;
+            startTime = null;
+            endTime = null;
+            triggerCount = 0;
+            Triggered = false;
         }
     }
 }

@@ -10,12 +10,14 @@ namespace Mediapipe.Unity
         protected int updateCount;
         protected int checkedUpdateCount;
         protected List<HumanPartTrigger> triggerList;
-        public HumanPartController()
+        public HumanPart HumanPart { get; protected set; }
+        public HumanPartController(HumanPart humanPart)
         {
             landmarkList = new NormalizedLandmarkList();
             updateCount = 0;
             checkedUpdateCount = 0;
             triggerList = new List<HumanPartTrigger>();
+            HumanPart = humanPart;
         }
         public bool CheckLandmarkList(NormalizedLandmarkList landmarkList)
         {
