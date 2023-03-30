@@ -29,10 +29,5 @@ namespace Mediapipe.Unity
 
             return calculators;
         }
-
-        public void ComputeOrientation()
-        {
-            torsoJointFactory.SetOrientation();
-        }
     }
 };

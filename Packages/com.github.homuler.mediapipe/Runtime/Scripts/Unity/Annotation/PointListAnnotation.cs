@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using UnityEditor.Animations;
 using UnityEngine;
 
 using mplt = Mediapipe.LocationData.Types;

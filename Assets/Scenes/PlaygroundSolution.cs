@@ -76,7 +76,7 @@ namespace Mediapipe.Unity.Holistic
         graphRunner.OnPoseDetectionOutput += OnPoseDetectionOutput;
         graphRunner.OnFaceLandmarksOutput += OnFaceLandmarksOutput;
         graphRunner.OnPoseLandmarksOutput += OnPoseLandmarksOutput;
-        graphRunner.OnLeftHandLandmarksOutput += OnLeftHandLandmarksOutput;
+        graphRunner.OnLeftHandLandmarksOutput +=  OnLeftHandLandmarksOutput;
         graphRunner.OnRightHandLandmarksOutput += OnRightHandLandmarksOutput;
         graphRunner.OnPoseWorldLandmarksOutput += OnPoseWorldLandmarksOutput;
         graphRunner.OnSegmentationMaskOutput += OnSegmentationMaskOutput;
@@ -139,22 +139,25 @@ namespace Mediapipe.Unity.Holistic
     {
       _holisticAnnotationController.DrawPoseLandmarkListLater(eventArgs.value);
       // _skeletonController.UpdateLandmarksPositions(eventArgs.value);
+      _mediapipe2UnitySkeletonController.Refresh(eventArgs.value);
+
     }
 
     private void OnLeftHandLandmarksOutput(object stream, OutputEventArgs<NormalizedLandmarkList> eventArgs)
     {
       _holisticAnnotationController.DrawLeftHandLandmarkListLater(eventArgs.value);
+      _mediapipe2UnitySkeletonController.RefreshHand(eventArgs.value, false);
     }
 
     private void OnRightHandLandmarksOutput(object stream, OutputEventArgs<NormalizedLandmarkList> eventArgs)
     {
       _holisticAnnotationController.DrawRightHandLandmarkListLater(eventArgs.value);
+      _mediapipe2UnitySkeletonController.RefreshHand(eventArgs.value, true);
     }
 
     private void OnPoseWorldLandmarksOutput(object stream, OutputEventArgs<LandmarkList> eventArgs)
     {
       _poseWorldLandmarksAnnotationController.DrawLater(eventArgs.value);
-      _mediapipe2UnitySkeletonController.Refresh(eventArgs.value);
     }
 
     private void OnSegmentationMaskOutput(object stream, OutputEventArgs<ImageFrame> eventArgs)

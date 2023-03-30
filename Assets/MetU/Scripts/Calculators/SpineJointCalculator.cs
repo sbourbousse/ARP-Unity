@@ -24,10 +24,6 @@ namespace Mediapipe.Unity
             );
 
             var v_spine = m_left - m_right;
-            Debug.Log("obj.forward");
-            Debug.Log(obj.forward);
-            Debug.Log("v_spine");
-            Debug.Log(v_spine);
             
             obj.Rotate(
                 Quaternion.FromToRotation(obj.forward, v_spine).eulerAngles,

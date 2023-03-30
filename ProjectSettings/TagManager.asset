@@ -17,6 +17,8 @@ TagManager:
   - scene
   - ui
   - Solution
+  - rightsword
+  - leftsword
   layers:
   - Default
   - TransparentFX

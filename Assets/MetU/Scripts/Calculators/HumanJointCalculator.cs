@@ -5,14 +5,14 @@ namespace Mediapipe.Unity
     public class HumanJointCalculator
     {
         public Transform obj;
-        public LandmarkList _landmarkList;
+        public NormalizedLandmarkList _landmarkList;
 
         public HumanJointCalculator (Transform t)
         {
             obj = t;
         }
         
-        public void Refresh (LandmarkList landmarkList) 
+        public void Refresh (NormalizedLandmarkList landmarkList) 
         {
             _landmarkList = landmarkList;
         }

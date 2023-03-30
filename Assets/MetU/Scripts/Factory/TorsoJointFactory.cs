@@ -27,10 +27,5 @@ namespace Mediapipe.Unity
 
             return calculators;
         }
-        
-        public void SetOrientation()
-        {
-            //TODO
-        }
     }
 };
