@@ -4,76 +4,42 @@ using UnityEngine;
 
 public class ActionController : MonoBehaviour
 {
-    [SerializeField] public Camera _avatarCamera2;
-    [SerializeField] public Camera _avatarCamera;
-    [SerializeField] public Camera _uICamera;
+    [SerializeField] public GameObject _mainCameraContainer;
 
     // Start is called before the first frame update
     void Start()
     {
-        ShowUI();
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        // If the spacebar is pressed, toggle the camera
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKey(KeyCode.DownArrow))
         {
-            ToggleCamera();
+            // Move camera down
+            _mainCameraContainer.transform.position = new Vector3(_mainCameraContainer.transform.position.x, _mainCameraContainer.transform.position.y - 0.1f, _mainCameraContainer.transform.position.z);
         }
-    }
-    
-    //Toggle between the two cameras
-    public void ToggleCamera()
-    {
-        if (_avatarCamera.enabled)
+        if (Input.GetKey(KeyCode.UpArrow))
         {
-            ShowAvatar2();
+            // Move camera up
+            _mainCameraContainer.transform.position = new Vector3(_mainCameraContainer.transform.position.x, _mainCameraContainer.transform.position.y + 0.1f, _mainCameraContainer.transform.position.z);
         }
-        else if (_avatarCamera2.enabled)
+        if (Input.GetKey(KeyCode.LeftArrow))
         {
-            ShowUI();
+            // Move camera left
+            _mainCameraContainer.transform.position = new Vector3(_mainCameraContainer.transform.position.x - 0.1f, _mainCameraContainer.transform.position.y, _mainCameraContainer.transform.position.z);
         }
-        else if (_uICamera.enabled)
+        if (Input.GetKey(KeyCode.RightArrow))
         {
-            ShowAvatar();
+            // Move camera right
+            _mainCameraContainer.transform.position = new Vector3(_mainCameraContainer.transform.position.x + 0.1f, _mainCameraContainer.transform.position.y, _mainCameraContainer.transform.position.z);
         }
-    }
-    
-    
-    public void ShowAvatar()
-    {
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Confined;
-        Debug.Log("ShowAvatar");
-        DisableAll();
-        _avatarCamera.enabled = true;
-    }
 
-    public void ShowAvatar2()
-    {
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Confined;
-        Debug.Log("ShowAvatar2");
-        DisableAll();
-        _avatarCamera2.enabled = true;
+        //Handle pressing key
+
     }
     
-    public void ShowUI()
-    {
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
-        Debug.Log("ShowUI");
-        DisableAll();
-        _uICamera.enabled = true;
-    }
-
-    public void DisableAll() 
-    {
-        _avatarCamera.enabled = false;
-        _avatarCamera2.enabled = false;
-        _uICamera.enabled = false;
-    }
+   
 
 }

@@ -40,17 +40,17 @@ namespace UnityChan
 		// Update is called once per frame
 		void  Update ()
 		{
-			// ↑キー/スペースが押されたら、ステートを次に送る処理
-			if (Input.GetKeyDown ("up") || Input.GetButton ("Jump")) {
-				// ブーリアンNextをtrueにする
-				anim.SetBool ("Next", true);
-			}
+			// // ↑キー/スペースが押されたら、ステートを次に送る処理
+			// if (Input.GetKeyDown ("up") || Input.GetButton ("Jump")) {
+			// 	// ブーリアンNextをtrueにする
+			// 	anim.SetBool ("Next", true);
+			// }
 		
-			// ↓キーが押されたら、ステートを前に戻す処理
-			if (Input.GetKeyDown ("down")) {
-				// ブーリアンBackをtrueにする
-				anim.SetBool ("Back", true);
-			}
+			// // ↓キーが押されたら、ステートを前に戻す処理
+			// if (Input.GetKeyDown ("down")) {
+			// 	// ブーリアンBackをtrueにする
+			// 	anim.SetBool ("Back", true);
+			// }
 		
 			// "Next"フラグがtrueの時の処理
 			if (anim.GetBool ("Next")) {
@@ -75,11 +75,11 @@ namespace UnityChan
 
 		void OnGUI ()
 		{
-			GUI.Box (new Rect (Screen.width - 110, 10, 100, 90), "Change Motion");
-			if (GUI.Button (new Rect (Screen.width - 100, 40, 80, 20), "Next"))
-				anim.SetBool ("Next", true);
-			if (GUI.Button (new Rect (Screen.width - 100, 70, 80, 20), "Back"))
-				anim.SetBool ("Back", true);
+			// GUI.Box (new Rect (Screen.width - 110, 10, 100, 90), "Change Motion");
+			// if (GUI.Button (new Rect (Screen.width - 100, 40, 80, 20), "Next"))
+			// 	anim.SetBool ("Next", true);
+			// if (GUI.Button (new Rect (Screen.width - 100, 70, 80, 20), "Back"))
+			// 	anim.SetBool ("Back", true);
 		}
 
 

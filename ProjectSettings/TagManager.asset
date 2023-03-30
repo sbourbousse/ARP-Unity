@@ -20,6 +20,7 @@ TagManager:
   - rightsword
   - leftsword
   - avatar-shirt
+  - SecondaryCamera
   layers:
   - Default
   - TransparentFX
