@@ -21,6 +21,7 @@ TagManager:
   - leftsword
   - avatar-shirt
   - SecondaryCamera
+  - POVCamera
   layers:
   - Default
   - TransparentFX

@@ -5,11 +5,13 @@ using UnityEngine;
 public class ActionController : MonoBehaviour
 {
     [SerializeField] public GameObject _mainCameraContainer;
+    [SerializeField] public GameObject _povCamera;
+    public GameObject _ui;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        _ui = GameObject.FindWithTag("ui");
     }
 
     // Update is called once per frame
@@ -36,7 +38,16 @@ public class ActionController : MonoBehaviour
             _mainCameraContainer.transform.position = new Vector3(_mainCameraContainer.transform.position.x + 0.1f, _mainCameraContainer.transform.position.y, _mainCameraContainer.transform.position.z);
         }
 
-        //Handle pressing key
+        // on space enter hide UI
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            _ui.SetActive(!_ui.activeSelf);            
+        }
+
+        if(Input.GetKeyDown(KeyCode.P))
+        {
+            _povCamera.SetActive(!_povCamera.activeSelf);
+        }
 
     }
     

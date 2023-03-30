@@ -11,6 +11,7 @@ namespace Mediapipe.Unity
         LeftHipCalculator leftHipCalculator;
         LeftKneeCalculator leftKneeCalculator;
         LeftAnkleCalculator leftAnkleCalculator;
+        LeftThumbCalculator leftThumbCalculator;
 
         public LeftLimbsJointFactory(Animator anim)
         {
@@ -32,6 +33,9 @@ namespace Mediapipe.Unity
             leftAnkleCalculator = new LeftAnkleCalculator(
                 anim.GetBoneTransform(HumanBodyBones.LeftFoot)
             );
+            leftThumbCalculator = new LeftThumbCalculator(
+                anim.GetBoneTransform(HumanBodyBones.LeftThumbProximal)
+            );
         }
 
         public HashSet<HumanJointCalculator> Generate ()
@@ -43,6 +47,7 @@ namespace Mediapipe.Unity
             calculators.Add(leftHipCalculator);
             calculators.Add(leftKneeCalculator);
             calculators.Add(leftAnkleCalculator);
+            calculators.Add(leftThumbCalculator);
             return calculators;
         }
     }
