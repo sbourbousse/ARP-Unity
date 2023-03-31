@@ -2,9 +2,6 @@ using Mediapipe;
 using UnityEngine;
 using System.Collections.Generic;
 using System;
-using System.Linq;
-// utc now
-using System.Diagnostics;
 
 namespace Mediapipe.Unity
 {
@@ -12,10 +9,7 @@ namespace Mediapipe.Unity
 	public class Mediapipe2UnitySkeletonController : MonoBehaviour
 	{
 		private HumanController humanController;
-
 		private AvatarActionController avatarActionController;
-		LeftWristCalculator leftWristCalculator;
-		RightWristCalculator rightWristCalculator;
 		private NormalizedLandmarkList prevHandLandmarks;
 		private HumanJointFactory jointFactory;
 		private HashSet<HumanJointCalculator> calculators;
@@ -27,8 +21,6 @@ namespace Mediapipe.Unity
 
 			jointFactory = new HumanJointFactory(_anim);
 			calculators = jointFactory.Generate();
-			leftWristCalculator = calculators.OfType<LeftWristCalculator>().First();
-			rightWristCalculator = calculators.OfType<RightWristCalculator>().First();
 			humanController = new HumanController();
 			avatarActionController = new AvatarActionController();
 		}
@@ -50,7 +42,7 @@ namespace Mediapipe.Unity
 			}
 		}
 
-		public void Refresh(NormalizedLandmarkList target, bool reverseCoordinates = false)
+		public void Refresh(LandmarkList target, bool reverseCoordinates = false)
 		{
 
 			if (reverseCoordinates && target != null && target.Landmark != null)
@@ -77,10 +69,12 @@ namespace Mediapipe.Unity
     }
 
 	public class AvatarActionController {
-		const int ColDown = 1000;
+		bool IsSwordLeftActive = false;
+		bool IsSwordRightActive = false;
 		public AvatarActionController()
 		{
-			IsSwordActive = true;
+			IsSwordLeftActive = true;
+			IsSwordRightActive = true;
 			RightSword = GameObject.FindWithTag("rightsword");
 			LeftSword = GameObject.FindWithTag("leftsword");
 
@@ -103,31 +97,42 @@ namespace Mediapipe.Unity
 		}
 		public void TriggerSword(HumanPartSide side)
 		{
-			string gameTag = GetTagBySide(side);
-			if (IsSwordActive)
+			bool swordActive = false;
+			if (side == HumanPartSide.Left)
 			{
-				// Hide sword mesh renderer and box collider
-				HideSword();
+				swordActive = IsSwordLeftActive;
+				IsSwordLeftActive = !IsSwordLeftActive;
+			}
+			else if (side == HumanPartSide.Right)
+			{
+				swordActive = IsSwordRightActive;
+				IsSwordRightActive = !IsSwordRightActive;
+			}
+			
+			if (swordActive)
+			{
+				HideSword(side);
 			}
 			else
 			{
-				// Show sword mesh renderer and box collider
-				ShowSword();
+				ShowSword(side);
 			}
 		}
 
-		public void ShowSword()
+		public void ShowSword(HumanPartSide side)
 		{
-			LeftSword.transform.localScale = new Vector3(3f, 3f, 3f);
-			LeftSword.GetComponent<BoxCollider>().enabled = true;
-			IsSwordActive = true;
+			if (side == HumanPartSide.Left)
+				LeftSword.SetActive(true);
+			else if (side == HumanPartSide.Right)
+				RightSword.SetActive(true);
 		}
 
-		public void HideSword()
+		public void HideSword(HumanPartSide side)
 		{
-			LeftSword.transform.localScale = new Vector3(0f, 0f, 0f);
-			LeftSword.GetComponent<BoxCollider>().enabled = false;
-			IsSwordActive = false;
+			if (side == HumanPartSide.Left)
+				LeftSword.SetActive(false);
+			else if (side == HumanPartSide.Right)
+				RightSword.SetActive(false);
 		}
 	}
-}
+} 	

@@ -138,8 +138,6 @@ namespace Mediapipe.Unity.Holistic
     private void OnPoseLandmarksOutput(object stream, OutputEventArgs<NormalizedLandmarkList> eventArgs)
     {
       _holisticAnnotationController.DrawPoseLandmarkListLater(eventArgs.value);
-      // _skeletonController.UpdateLandmarksPositions(eventArgs.value);
-      _mediapipe2UnitySkeletonController.Refresh(eventArgs.value);
 
     }
 
@@ -158,6 +156,7 @@ namespace Mediapipe.Unity.Holistic
     private void OnPoseWorldLandmarksOutput(object stream, OutputEventArgs<LandmarkList> eventArgs)
     {
       _poseWorldLandmarksAnnotationController.DrawLater(eventArgs.value);
+      _mediapipe2UnitySkeletonController.Refresh(eventArgs.value);
     }
 
     private void OnSegmentationMaskOutput(object stream, OutputEventArgs<ImageFrame> eventArgs)
