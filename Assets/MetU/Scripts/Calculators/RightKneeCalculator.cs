@@ -19,7 +19,7 @@ namespace Mediapipe.Unity
 
             var norm_x = Vector3.Cross(v_ankle_index, v_ankle_heel);
             obj.Rotate(
-                Quaternion.FromToRotation(obj.forward, norm_x).eulerAngles,
+                Quaternion.FromToRotation(initialObj.forward, norm_x).eulerAngles,
                 Space.World
             );
         }

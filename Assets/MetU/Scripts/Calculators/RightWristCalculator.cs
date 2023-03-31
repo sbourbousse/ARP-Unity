@@ -14,7 +14,7 @@ namespace Mediapipe.Unity
 
             var norm_x = Vector3.Cross(v_wrist_pinky, v_wrist_index);
             obj.Rotate(
-                Quaternion.FromToRotation(-obj.forward, norm_x).eulerAngles,
+                Quaternion.FromToRotation(-initialObj.forward, norm_x).eulerAngles,
                 Space.World
             );
         }

@@ -26,7 +26,7 @@ namespace Mediapipe.Unity
             var v_spine = m_left - m_right;
             
             obj.Rotate(
-                Quaternion.FromToRotation(obj.forward, v_spine).eulerAngles,
+                Quaternion.FromToRotation(initialObj.forward, v_spine).eulerAngles,
                 Space.World
             );            
         }
