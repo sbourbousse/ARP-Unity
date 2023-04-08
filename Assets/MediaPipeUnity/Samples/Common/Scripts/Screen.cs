@@ -14,6 +14,7 @@ namespace Mediapipe.Unity
     [SerializeField] private RawImage _screen;
 
     private ImageSource _imageSource;
+    private bool isHiddenImageSource;
 
     public Texture texture
     {
@@ -33,7 +34,7 @@ namespace Mediapipe.Unity
       Resize(_imageSource.textureWidth, _imageSource.textureHeight);
       Rotate(_imageSource.rotation.Reverse());
       ResetUvRect(RunningMode.Async);
-      texture = imageSource.GetCurrentTexture();
+      HideImageSource();
     }
 
     public void Resize(int width, int height)
@@ -94,5 +95,33 @@ namespace Mediapipe.Unity
     {
       return new UnityEngine.Rect(rect.x, 1 - rect.y, rect.width, -rect.height);
     }
+
+
+    //Toggle the screen
+    public void ToggleImageSource() {
+      if (isHiddenImageSource) {
+        ShowImageSource();
+      } else {
+        HideImageSource();
+      }
+    }
+
+    //Hide the screen
+    public void HideImageSource() {
+      // Set transparent texture
+      texture = new Texture2D(_imageSource.textureWidth, _imageSource.textureHeight, TextureFormat.RGBA32, false);
+      // Raw Image Color Alpha = 0
+      _screen.color = new UnityEngine.Color(1, 1, 1, 0);
+      isHiddenImageSource = true;
+    }
+
+    //Show the screen
+    public void ShowImageSource() {
+      // Raw Image Color Alpha = 1
+      _screen.color = new UnityEngine.Color(1, 1, 1, 1);
+      texture = _imageSource.GetCurrentTexture();
+      isHiddenImageSource = false;
+    }
+    
   }
 }

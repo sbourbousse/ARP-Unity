@@ -1169,7 +1169,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4416926081852918481, guid: 64dce48905ffd9b4293e595fa6941544, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4416926081852918490, guid: 64dce48905ffd9b4293e595fa6941544, type: 3}
       propertyPath: m_Enabled
@@ -2398,7 +2398,7 @@ GameObject:
   - component: {fileID: 1098148265}
   - component: {fileID: 1098148264}
   m_Layer: 0
-  m_Name: Directional Light (1)
+  m_Name: Directional Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2786,7 +2786,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100096, guid: 412b92d4feeb9c548bfa98f62c4d1022, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 100114, guid: 412b92d4feeb9c548bfa98f62c4d1022, type: 3}
       propertyPath: m_IsActive
@@ -3370,7 +3370,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1411181925}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f035d0b35bab0437d874dae0f80cb534, type: 3}
   m_Name: 
@@ -3661,7 +3661,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1580767650}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 498146e99d4934673bd948c8be11227e, type: 3}
   m_Name: 
@@ -3736,11 +3736,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1580767650}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 939ac1930d6de4842a0acfe5492df832, type: 3}
+  m_Script: {fileID: 11500000, guid: 22ab09561a3ea8e468f052db80e71e82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bootstrap: {fileID: 0}
-  isPaused: 0
+  bootstrap: {fileID: 1580767655}
   screen: {fileID: 125247951}
   graphRunner: {fileID: 1580767652}
   textureFramePool: {fileID: 1580767654}
@@ -3751,7 +3750,7 @@ MonoBehaviour:
   _poseRoiAnnotationController: {fileID: 819323241}
   _worldAnnotationArea: {fileID: 686380018}
   _poseWorldLandmarksAnnotationController: {fileID: 686380017}
-  _mediapipe2UnitySkeletonController: {fileID: 536946185}
+  _mediapipe2UnitySkeletonController: {fileID: 1411181926}
 --- !u!114 &1580767657
 MonoBehaviour:
   m_ObjectHideFlags: 0
